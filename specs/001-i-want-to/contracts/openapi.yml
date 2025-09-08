@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: TCG API
+  version: 1.0.0
+paths:
+  /cards:
+    get:
+      summary: Get all cards
+      responses:
+        '200':
+          description: A list of cards
+  /sets:
+    get:
+      summary: Get all sets
+      responses:
+        '200':
+          description: A list of sets
+  /tournaments:
+    get:
+      summary: Get all tournaments
+      responses:
+        '200':
+          description: A list of tournaments
+  /decks:
+    get:
+      summary: Get all public decks
+      responses:
+        '200':
+          description: A list of public decks
+    post:
+      summary: Create a new deck
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Deck created
+  /decks/{id}:
+    get:
+      summary: Get a specific deck
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested deck
+    put:
+      summary: Update a deck
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deck updated
+    delete:
+      summary: Delete a deck
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deck deleted
+  /rules:
+    get:
+      summary: Get the rules
+      responses:
+        '200':
+          description: The game rules
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
