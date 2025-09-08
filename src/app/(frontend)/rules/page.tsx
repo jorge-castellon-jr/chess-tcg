@@ -6,8 +6,9 @@ import Link from 'next/link'
 import config from '@/payload.config'
 import ThemeToggle from '../../../components/ThemeToggle'
 import styles from './RulesPage.module.scss'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Game Rules - Chess TCG',
   description: 'Learn the rules and mechanics of Chess Trading Card Game.',
 }
@@ -30,7 +31,7 @@ export default async function RulesPage() {
   return (
     <div className={styles.rulesPage}>
       <ThemeToggle />
-      
+
       <header className={styles.rulesHeader}>
         <nav className={styles.rulesNav}>
           <Link href="/" className={styles.homeLink}>
@@ -43,7 +44,7 @@ export default async function RulesPage() {
       <main className={styles.rulesContent}>
         <div className={styles.rulesContainer}>
           {rules && rules.content ? (
-            <div 
+            <div
               className={styles.rulesText}
               dangerouslySetInnerHTML={{ __html: rules.content }}
             />

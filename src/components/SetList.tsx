@@ -1,110 +1,108 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-
-interface Set {
-  id: string;
-  name: string;
-  releaseDate: string;
-  cardCount?: number;
-  description?: string;
-  image?: string;
-}
+import React, { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Set } from '@/payload-types'
 
 interface SetListProps {
-  sets?: Set[];
-  onSetSelect?: (set: Set) => void;
-  selectedSet?: string;
-  layout?: 'grid' | 'list';
+  sets?: Set[]
+  onSetSelect?: (set: Set) => void
+  selectedSet?: string
+  layout?: 'grid' | 'list'
 }
 
 const SetList: React.FC<SetListProps> = ({
   sets = [],
   onSetSelect,
   selectedSet,
-  layout = 'grid'
+  layout = 'grid',
 }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [filteredSets, setFilteredSets] = useState<Set[]>(sets);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [filteredSets, setFilteredSets] = useState<Set[]>(sets)
 
   // Get state from URL params
-  const searchTerm = searchParams.get('search') || '';
-  const sortBy = (searchParams.get('sort') as 'name' | 'date' | 'cards') || 'name';
+  const searchTerm = searchParams.get('search') || ''
+  const sortBy =
+    (searchParams.get('sort') as 'name' | 'date' | 'cards') || 'name'
 
   // Function to update URL params
   const updateUrlParams = (updates: { search?: string; sort?: string }) => {
-    const params = new URLSearchParams(searchParams.toString());
-    
+    const params = new URLSearchParams(searchParams.toString())
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value && value !== '' && value !== 'name') {
-        params.set(key, value);
+        params.set(key, value)
       } else if (key === 'sort' && value === 'name') {
-        params.delete(key); // Remove default sort
+        params.delete(key) // Remove default sort
       } else if (key === 'search' && !value) {
-        params.delete(key);
+        params.delete(key)
       } else if (value) {
-        params.set(key, value);
+        params.set(key, value)
       }
-    });
-    
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+    })
+
+    router.push(`?${params.toString()}`, { scroll: false })
+  }
 
   useEffect(() => {
-    let filtered = sets.filter(set =>
-      set.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (set.description && set.description.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    let filtered = sets.filter(
+      (set) =>
+        set.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (set.description &&
+          set.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
 
     // Sort sets
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'date':
-          return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
+          return (
+            new Date(b.releaseDate).getTime() -
+            new Date(a.releaseDate).getTime()
+          )
         case 'cards':
-          return (b.cardCount || 0) - (a.cardCount || 0);
+          return (b.cardCount || 0) - (a.cardCount || 0)
         case 'name':
         default:
-          return a.name.localeCompare(b.name);
+          return a.name.localeCompare(b.name)
       }
-    });
+    })
 
-    setFilteredSets(filtered);
-  }, [sets, searchTerm, sortBy]);
+    setFilteredSets(filtered)
+  }, [sets, searchTerm, sortBy])
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
-    });
-  };
+      day: 'numeric',
+    })
+  }
 
   const getRelativeDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = now.getTime() - date.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffTime = now.getTime() - date.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
     if (diffDays < 0) {
-      return 'Upcoming';
+      return 'Upcoming'
     } else if (diffDays === 0) {
-      return 'Today';
+      return 'Today'
     } else if (diffDays === 1) {
-      return 'Yesterday';
+      return 'Yesterday'
     } else if (diffDays < 30) {
-      return `${diffDays} days ago`;
+      return `${diffDays} days ago`
     } else if (diffDays < 365) {
-      const months = Math.floor(diffDays / 30);
-      return `${months} month${months > 1 ? 's' : ''} ago`;
+      const months = Math.floor(diffDays / 30)
+      return `${months} month${months > 1 ? 's' : ''} ago`
     } else {
-      const years = Math.floor(diffDays / 365);
-      return `${years} year${years > 1 ? 's' : ''} ago`;
+      const years = Math.floor(diffDays / 365)
+      return `${years} year${years > 1 ? 's' : ''} ago`
     }
-  };
+  }
 
   return (
     <div className="set-list">
@@ -159,18 +157,20 @@ const SetList: React.FC<SetListProps> = ({
                   </div>
                 )}
                 {set.cardCount && (
-                  <div className="card-count-badge">
-                    {set.cardCount} cards
-                  </div>
+                  <div className="card-count-badge">{set.cardCount} cards</div>
                 )}
               </div>
 
               <div className="set-content">
                 <h3 className="set-name">{set.name}</h3>
-                
+
                 <div className="set-date">
-                  <span className="date-full">{formatDate(set.releaseDate)}</span>
-                  <span className="date-relative">{getRelativeDate(set.releaseDate)}</span>
+                  <span className="date-full">
+                    {formatDate(set.releaseDate)}
+                  </span>
+                  <span className="date-relative">
+                    {getRelativeDate(set.releaseDate)}
+                  </span>
                 </div>
 
                 {set.description && (
@@ -180,7 +180,9 @@ const SetList: React.FC<SetListProps> = ({
                 <div className="set-stats">
                   <div className="stat">
                     <span className="stat-icon">📅</span>
-                    <span className="stat-text">{getRelativeDate(set.releaseDate)}</span>
+                    <span className="stat-text">
+                      {getRelativeDate(set.releaseDate)}
+                    </span>
                   </div>
                   {set.cardCount && (
                     <div className="stat">
@@ -301,7 +303,11 @@ const SetList: React.FC<SetListProps> = ({
         .set-image-placeholder {
           width: 100%;
           height: 100%;
-          background: linear-gradient(135deg, var(--bg-secondary), var(--border-color));
+          background: linear-gradient(
+            135deg,
+            var(--bg-secondary),
+            var(--border-color)
+          );
           display: flex;
           align-items: center;
           justify-content: center;
@@ -458,7 +464,7 @@ const SetList: React.FC<SetListProps> = ({
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default SetList;
+export default SetList

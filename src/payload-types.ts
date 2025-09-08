@@ -132,31 +132,28 @@ export interface UserAuthOperations {
 export interface Card {
   id: number;
   name?: string | null;
-  cardType?: ('Piece' | 'Tactic' | 'King') | null;
-  materialValue?: number | null;
-  cost?: number | null;
-  attack?: number | null;
-  health?: number | null;
-  effects?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  tacticType?: ('Equip' | 'Static' | 'Action') | null;
-  set?: (number | null) | Set;
-  image?: string | null;
+  image?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -227,25 +224,6 @@ export interface User {
       }[]
     | null;
   password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -326,14 +304,6 @@ export interface PayloadMigration {
  */
 export interface CardsSelect<T extends boolean = true> {
   name?: T;
-  cardType?: T;
-  materialValue?: T;
-  cost?: T;
-  attack?: T;
-  health?: T;
-  effects?: T;
-  tacticType?: T;
-  set?: T;
   image?: T;
   updatedAt?: T;
   createdAt?: T;

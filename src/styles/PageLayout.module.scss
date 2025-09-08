@@ -1,0 +1,167 @@
+// Shared styles for all frontend pages
+.page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.pageHeader {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0;
+}
+
+.pageNav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.pageNavWide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.homeLink {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.homeLink:hover {
+  opacity: 0.8;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pageContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.pageContentWide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.contentContainer {
+  width: 100%;
+}
+
+.pageIntro {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.pageIntro p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.pageIntroWide p {
+  max-width: 700px;
+}
+
+.noData {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-secondary);
+}
+
+.noDataIcon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.noData h2 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+}
+
+.noData p {
+  margin: 0 0 24px 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.adminLink {
+  display: inline-block;
+  background: var(--link-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.adminLink:hover {
+  opacity: 0.9;
+}
+
+.secondaryLink {
+  display: inline-block;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.secondaryLink:hover {
+  background: var(--bg-secondary);
+  border-color: var(--link-color);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .pageNav,
+  .pageNavWide {
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .pageTitle {
+    font-size: 24px;
+  }
+
+  .pageContent,
+  .pageContentWide {
+    padding: 24px 20px;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}

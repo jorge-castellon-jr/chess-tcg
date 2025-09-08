@@ -1,100 +1,89 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import styles from './CardList.module.scss';
-
-interface Card {
-  id: string;
-  name: string;
-  cardType: 'Piece' | 'Tactic' | 'King';
-  cost: number;
-  materialValue?: number;
-  attack?: number;
-  health?: number;
-  effects: string;
-  tacticType?: 'Equip' | 'Static' | 'Action';
-  set: {
-    id: string;
-    name: string;
-  };
-  image?: string;
-}
+import React, { useState, useEffect, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Card as CardType } from '@/payload-types'
+import Card from './Card'
+import styles from './CardList.module.scss'
 
 interface CardListProps {
-  cards?: Card[];
-  onCardSelect?: (card: Card) => void;
-  selectedCards?: string[];
-  showFilters?: boolean;
+  cards?: CardType[]
+  onCardSelect?: (card: CardType) => void
+  selectedCards?: (string | number)[]
+  showFilters?: boolean
 }
 
-const CardList: React.FC<CardListProps> = ({ 
-  cards = [], 
+const CardList: React.FC<CardListProps> = ({
+  cards = [],
   onCardSelect,
   selectedCards = [],
-  showFilters = true 
+  showFilters = true,
 }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [filteredCards, setFilteredCards] = useState<Card[]>(cards);
-  
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [filteredCards, setFilteredCards] = useState<CardType[]>(cards)
+
   // Get state from URL params
-  const searchTerm = searchParams.get('search') || '';
-  const filterType = searchParams.get('type') || 'all';
-  const sortBy = (searchParams.get('sort') as 'name' | 'cost' | 'type') || 'name';
+  const searchTerm = searchParams.get('search') || ''
+  const sortBy = (searchParams.get('sort') as 'name' | 'date') || 'name'
+
+  // Local state for search input (for debouncing)
+  const [searchInput, setSearchInput] = useState(searchTerm)
+
+  // Update local search input when URL changes (e.g., browser back/forward)
+  useEffect(() => {
+    setSearchInput(searchTerm)
+  }, [searchTerm])
 
   // Function to update URL params
-  const updateUrlParams = (updates: { search?: string; type?: string; sort?: string }) => {
-    const params = new URLSearchParams(searchParams.toString());
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value && value !== '' && value !== 'all') {
-        params.set(key, value);
-      } else {
-        params.delete(key);
+  const updateUrlParams = useCallback(
+    (updates: { search?: string; sort?: string }) => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value && value !== '') {
+          params.set(key, value)
+        } else {
+          params.delete(key)
+        }
+      })
+
+      router.push(`?${params.toString()}`, { scroll: false })
+    },
+    [searchParams, router]
+  )
+
+  // Debounced search update
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchInput !== searchTerm) {
+        updateUrlParams({ search: searchInput })
       }
-    });
-    
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+    }, 300) // 300ms debounce delay
+
+    return () => clearTimeout(timeoutId)
+  }, [searchInput, searchTerm, updateUrlParams])
 
   useEffect(() => {
-    let filtered = cards.filter(card => 
-      card.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    if (filterType !== 'all') {
-      filtered = filtered.filter(card => card.cardType === filterType);
-    }
+    let filtered = cards.filter((card) =>
+      card.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
     // Sort cards
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'cost':
-          return a.cost - b.cost;
-        case 'type':
-          return a.cardType.localeCompare(b.cardType);
+        case 'date':
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
         case 'name':
         default:
-          return a.name.localeCompare(b.name);
+          return (a.name || '').localeCompare(b.name || '')
       }
-    });
+    })
 
-    setFilteredCards(filtered);
-  }, [cards, searchTerm, filterType, sortBy]);
-
-  const getCardTypeColor = (type: string) => {
-    switch (type) {
-      case 'Piece':
-        return 'var(--card-piece, #4ade80)';
-      case 'Tactic':
-        return 'var(--card-tactic, #60a5fa)';
-      case 'King':
-        return 'var(--card-king, #f59e0b)';
-      default:
-        return 'var(--border-color)';
-    }
-  };
+    setFilteredCards(filtered)
+  }, [cards, searchTerm, sortBy])
 
   return (
     <div className={styles.cardList}>
@@ -103,21 +92,10 @@ const CardList: React.FC<CardListProps> = ({
           <input
             type="text"
             placeholder="Search cards..."
-            value={searchTerm}
-            onChange={(e) => updateUrlParams({ search: e.target.value })}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className={styles.searchInput}
           />
-          
-          <select
-            value={filterType}
-            onChange={(e) => updateUrlParams({ type: e.target.value })}
-            className={styles.filterSelect}
-          >
-            <option value="all">All Types</option>
-            <option value="Piece">Pieces</option>
-            <option value="Tactic">Tactics</option>
-            <option value="King">Kings</option>
-          </select>
 
           <select
             value={sortBy}
@@ -125,8 +103,7 @@ const CardList: React.FC<CardListProps> = ({
             className={styles.sortSelect}
           >
             <option value="name">Sort by Name</option>
-            <option value="cost">Sort by Cost</option>
-            <option value="type">Sort by Type</option>
+            <option value="date">Sort by Date Created</option>
           </select>
         </div>
       )}
@@ -138,56 +115,19 @@ const CardList: React.FC<CardListProps> = ({
           </div>
         ) : (
           filteredCards.map((card) => (
-            <div
+            <Card
               key={card.id}
-              className={`${styles.cardItem} ${selectedCards.includes(card.id) ? styles.selected : ''}`}
+              card={card}
+              selected={selectedCards.includes(card.id)}
               onClick={() => onCardSelect?.(card)}
-              style={{
-                borderColor: getCardTypeColor(card.cardType),
-              }}
-            >
-              <div className={styles.cardHeader}>
-                <h3 className={styles.cardName}>{card.name}</h3>
-                <div className={styles.cardCost}>{card.cost}</div>
-              </div>
-
-              <div className={styles.cardTypeBadge} style={{ backgroundColor: getCardTypeColor(card.cardType) }}>
-                {card.cardType}
-                {card.tacticType && ` • ${card.tacticType}`}
-              </div>
-
-              <div className={styles.cardStats}>
-                {card.attack !== undefined && (
-                  <div className={styles.stat}>
-                    <span className={styles.statLabel}>ATK</span>
-                    <span className={styles.statValue}>{card.attack}</span>
-                  </div>
-                )}
-                {card.health !== undefined && (
-                  <div className={styles.stat}>
-                    <span className={styles.statLabel}>HP</span>
-                    <span className={styles.statValue}>{card.health}</span>
-                  </div>
-                )}
-                {card.materialValue !== undefined && (
-                  <div className={styles.stat}>
-                    <span className={styles.statLabel}>MAT</span>
-                    <span className={styles.statValue}>{card.materialValue}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className={styles.cardEffects} dangerouslySetInnerHTML={{ __html: card.effects }} />
-
-              <div className={styles.cardFooter}>
-                <span className={styles.cardSet}>{card.set.name}</span>
-              </div>
-            </div>
+              variant="default"
+              showDate={true}
+            />
           ))
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CardList;
+export default CardList

@@ -1,145 +1,109 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-
-interface TournamentResult {
-  rank: number;
-  playerName: string;
-  deck: {
-    id: string;
-    name: string;
-  };
-}
-
-interface Tournament {
-  id: string;
-  name: string;
-  date: string;
-  results?: TournamentResult[];
-  status?: 'upcoming' | 'active' | 'completed';
-  participants?: number;
-  description?: string;
-  prize?: string;
-}
+import React, { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Tournament } from '@/payload-types'
 
 interface TournamentListProps {
-  tournaments?: Tournament[];
-  onTournamentSelect?: (tournament: Tournament) => void;
-  selectedTournament?: string;
-  layout?: 'grid' | 'list';
+  tournaments?: Tournament[]
+  onTournamentSelect?: (tournament: Tournament) => void
+  selectedTournament?: number
+  layout?: 'grid' | 'list'
 }
 
 const TournamentList: React.FC<TournamentListProps> = ({
   tournaments = [],
   onTournamentSelect,
   selectedTournament,
-  layout = 'grid'
+  layout = 'grid',
 }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [filteredTournaments, setFilteredTournaments] = useState<Tournament[]>(tournaments);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [filteredTournaments, setFilteredTournaments] =
+    useState<Tournament[]>(tournaments)
 
   // Get state from URL params
-  const searchTerm = searchParams.get('search') || '';
-  const statusFilter = searchParams.get('status') || 'all';
-  const sortBy = (searchParams.get('sort') as 'name' | 'date' | 'participants') || 'date';
+  const searchTerm = searchParams.get('search') || ''
+  const statusFilter = searchParams.get('status') || 'all'
+  const sortBy =
+    (searchParams.get('sort') as 'name' | 'date' | 'participants') || 'date'
 
   // Function to update URL params
-  const updateUrlParams = (updates: { search?: string; status?: string; sort?: string }) => {
-    const params = new URLSearchParams(searchParams.toString());
-    
+  const updateUrlParams = (updates: {
+    search?: string
+    status?: string
+    sort?: string
+  }) => {
+    const params = new URLSearchParams(searchParams.toString())
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value && value !== '' && value !== 'all' && value !== 'date') {
-        params.set(key, value);
+        params.set(key, value)
       } else if (key === 'sort' && value === 'date') {
-        params.delete(key); // Remove default sort
+        params.delete(key) // Remove default sort
       } else if (key === 'status' && value === 'all') {
-        params.delete(key); // Remove default filter
+        params.delete(key) // Remove default filter
       } else if (key === 'search' && !value) {
-        params.delete(key);
+        params.delete(key)
       } else if (value) {
-        params.set(key, value);
+        params.set(key, value)
       }
-    });
-    
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+    })
 
-  // Determine tournament status
-  const getTournamentStatus = (tournament: Tournament): 'upcoming' | 'active' | 'completed' => {
-    if (tournament.status) return tournament.status;
-    
-    const tournamentDate = new Date(tournament.date);
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const tDate = new Date(tournamentDate.getFullYear(), tournamentDate.getMonth(), tournamentDate.getDate());
-    
-    if (tDate > today) return 'upcoming';
-    if (tDate.getTime() === today.getTime()) return 'active';
-    return 'completed';
-  };
+    router.push(`?${params.toString()}`, { scroll: false })
+  }
 
   useEffect(() => {
-    let filtered = tournaments.filter(tournament => {
-      const matchesSearch = tournament.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (tournament.description && tournament.description.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      const matchesStatus = statusFilter === 'all' || getTournamentStatus(tournament) === statusFilter;
-      
-      return matchesSearch && matchesStatus;
-    });
+    const filtered = tournaments.filter((tournament) => {
+      const matchesSearch = (tournament.name || '')
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+
+      return matchesSearch
+    })
 
     // Sort tournaments
     filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'participants':
-          return (b.participants || b.results?.length || 0) - (a.participants || a.results?.length || 0);
-        case 'date':
-        default:
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-      }
-    });
+      return (a.name || '').localeCompare(b.name || '')
+    })
 
-    setFilteredTournaments(filtered);
-  }, [tournaments, searchTerm, statusFilter, sortBy]);
+    setFilteredTournaments(filtered)
+  }, [tournaments, searchTerm, statusFilter, sortBy])
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
-    });
-  };
+      day: 'numeric',
+    })
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'upcoming':
-        return 'var(--status-upcoming, #6366f1)';
+        return 'var(--status-upcoming, #6366f1)'
       case 'active':
-        return 'var(--status-active, #10b981)';
+        return 'var(--status-active, #10b981)'
       case 'completed':
-        return 'var(--status-completed, #6b7280)';
+        return 'var(--status-completed, #6b7280)'
       default:
-        return 'var(--border-color)';
+        return 'var(--border-color)'
     }
-  };
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'upcoming':
-        return '⏳';
+        return '⏳'
       case 'active':
-        return '🔥';
+        return '🔥'
       case 'completed':
-        return '🏆';
+        return '🏆'
       default:
-        return '📅';
+        return '📅'
     }
-  };
+  }
 
   return (
     <div className="tournament-list">
@@ -191,9 +155,8 @@ const TournamentList: React.FC<TournamentListProps> = ({
           </div>
         ) : (
           filteredTournaments.map((tournament) => {
-            const status = getTournamentStatus(tournament);
-            const participantCount = tournament.participants || tournament.results?.length || 0;
-            
+            const participantCount = tournament.results?.length || 0
+
             return (
               <div
                 key={tournament.id}
@@ -203,10 +166,12 @@ const TournamentList: React.FC<TournamentListProps> = ({
                 <div className="tournament-header">
                   <div className="tournament-info">
                     <h3 className="tournament-name">{tournament.name}</h3>
-                    <div className="tournament-date">{formatDate(tournament.date)}</div>
+                    <div className="tournament-date">
+                      {formatDate(tournament.date || '')}
+                    </div>
                   </div>
-                  <div 
-                    className="tournament-status" 
+                  <div
+                    className="tournament-status"
                     style={{ backgroundColor: getStatusColor(status) }}
                   >
                     <span className="status-icon">{getStatusIcon(status)}</span>
@@ -214,46 +179,16 @@ const TournamentList: React.FC<TournamentListProps> = ({
                   </div>
                 </div>
 
-                {tournament.description && (
-                  <p className="tournament-description">{tournament.description}</p>
-                )}
-
                 <div className="tournament-stats">
                   <div className="stat">
                     <span className="stat-icon">👥</span>
-                    <span className="stat-text">{participantCount} participants</span>
+                    <span className="stat-text">
+                      {participantCount} participants
+                    </span>
                   </div>
-                  {tournament.prize && (
-                    <div className="stat">
-                      <span className="stat-icon">💰</span>
-                      <span className="stat-text">{tournament.prize}</span>
-                    </div>
-                  )}
                 </div>
-
-                {status === 'completed' && tournament.results && tournament.results.length > 0 && (
-                  <div className="tournament-results">
-                    <h4>Top 3 Results:</h4>
-                    <div className="results-list">
-                      {tournament.results.slice(0, 3).map((result) => (
-                        <div key={`${tournament.id}-${result.rank}`} className="result-item">
-                          <div className="result-rank">
-                            <span className="rank-number">{result.rank}</span>
-                            {result.rank === 1 && <span className="rank-icon">🥇</span>}
-                            {result.rank === 2 && <span className="rank-icon">🥈</span>}
-                            {result.rank === 3 && <span className="rank-icon">🥉</span>}
-                          </div>
-                          <div className="result-info">
-                            <div className="player-name">{result.playerName}</div>
-                            <div className="deck-name">{result.deck.name}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
-            );
+            )
           })
         )}
       </div>
@@ -524,7 +459,7 @@ const TournamentList: React.FC<TournamentListProps> = ({
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default TournamentList;
+export default TournamentList

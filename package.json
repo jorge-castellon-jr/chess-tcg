@@ -1,5 +1,4 @@
 {
-  "name": "",
   "version": "1.0.0",
   "description": "A blank template to get started with Payload 3.0",
   "license": "MIT",
@@ -14,8 +13,8 @@
     "format": "prettier --write .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "test": "pnpm run test:int && pnpm run test:e2e",
-    "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" pnpm exec playwright test",
+    "test": "yarn run test:int && yarn run test:e2e",
+    "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" yarn exec playwright test",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
@@ -24,6 +23,7 @@
     "@payloadcms/next": "3.54.0",
     "@payloadcms/payload-cloud": "3.54.0",
     "@payloadcms/richtext-lexical": "3.54.0",
+    "@payloadcms/storage-s3": "^3.54.0",
     "@payloadcms/ui": "3.54.0",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
