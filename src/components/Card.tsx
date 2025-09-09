@@ -22,28 +22,17 @@ const Card: React.FC<CardProps> = ({
   className = '',
 }) => {
   // Helper function to get image URL
-  const getImageUrl = (image: CardType['image']): string | null => {
-    if (!image) return null
-    if (typeof image === 'object' && 'url' in image) {
-      return image.url || null
-    }
-    return null
+  const getImageUrl = (card: CardType): string | null => {
+    return card.url || card.thumbnailURL || null
   }
 
   // Helper function to get image alt text
-  const getImageAlt = (
-    image: CardType['image'],
-    cardName?: string | null
-  ): string => {
-    if (image === null) return 'Card image'
-    if (typeof image === 'object' && 'alt' in image && image.alt) {
-      return image.alt
-    }
+  const getImageAlt = (cardName?: string | null): string => {
     return cardName ? `${cardName} card` : 'Card image'
   }
 
-  const imageUrl = getImageUrl(card.image)
-  const imageAlt = getImageAlt(card.image, card.name)
+  const imageUrl = getImageUrl(card)
+  const imageAlt = getImageAlt(card.name)
 
   const cardClasses = [
     styles.card,
