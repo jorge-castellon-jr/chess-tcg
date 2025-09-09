@@ -132,8 +132,9 @@ export interface UserAuthOperations {
 export interface Card {
   id: number;
   name: string;
-  suit: 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades' | 'Neutral';
-  type: 'Piece' | 'Tactic' | 'Queen' | 'King';
+  suit: 'Neutral' | 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades';
+  type: 'Piece' | 'Tactic';
+  pieceType?: ('Basic' | 'Queen' | 'King') | null;
   set: number | Set;
   updatedAt: string;
   createdAt: string;
@@ -316,6 +317,7 @@ export interface CardsSelect<T extends boolean = true> {
   name?: T;
   suit?: T;
   type?: T;
+  pieceType?: T;
   set?: T;
   updatedAt?: T;
   createdAt?: T;

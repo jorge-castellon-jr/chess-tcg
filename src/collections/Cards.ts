@@ -14,14 +14,24 @@ export const Cards: CollectionConfig = {
     {
       name: 'suit',
       type: 'select',
-      options: ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Neutral'],
+      options: ['Neutral', 'Hearts', 'Diamonds', 'Clubs', 'Spades'],
+      defaultValue: 'Neutral',
       required: true,
     },
     {
       name: 'type',
       type: 'select',
-      options: ['Piece', 'Tactic', 'Queen', 'King'],
+      options: ['Piece', 'Tactic'],
+      defaultValue: 'Neutral',
       required: true,
+    },
+    {
+      name: 'pieceType',
+      type: 'select',
+      options: ['Basic', 'Queen', 'King'],
+      admin: {
+        condition: (data) => data.type === 'Piece',
+      },
     },
     {
       name: 'set',
