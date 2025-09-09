@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Set } from '@/payload-types'
 
 import config from '@/payload.config'
-import SetList from '../../../components/SetList'
+import SetListWrapper from '../../../components/SetListWrapper'
 import ThemeToggle from '../../../components/ThemeToggle'
 import styles from '../../../styles/PageLayout.module.scss'
 
@@ -54,7 +54,7 @@ export default async function SetsPage() {
             </p>
           </div>
 
-          <SetList sets={sets} layout="grid" />
+          <SetListWrapper sets={sets} layout="grid" />
         </div>
       </main>
     </div>

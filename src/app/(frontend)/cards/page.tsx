@@ -3,7 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 
 import config from '@/payload.config'
-import CardList from '../../../components/CardList'
+import CardListWrapper from '../../../components/CardListWrapper'
 import ThemeToggle from '../../../components/ThemeToggle'
 import styles from '../../../styles/PageLayout.module.scss'
 import { Card } from '@/payload-types'
@@ -54,7 +54,7 @@ export default async function CardsPage() {
             </p>
           </div>
 
-          <CardList cards={cards} showFilters={true} />
+          <CardListWrapper cards={cards} showFilters={true} />
 
           {cards.length === 0 && (
             <div className={styles.noData}>

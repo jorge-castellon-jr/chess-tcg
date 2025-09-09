@@ -3,7 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 
 import config from '@/payload.config'
-import TournamentList from '../../../components/TournamentList'
+import TournamentListWrapper from '../../../components/TournamentListWrapper'
 import ThemeToggle from '../../../components/ThemeToggle'
 import styles from '../../../styles/PageLayout.module.scss'
 import { Tournament } from '@/payload-types'
@@ -55,7 +55,7 @@ export default async function TournamentsPage() {
             </p>
           </div>
 
-          <TournamentList tournaments={tournaments} layout="grid" />
+          <TournamentListWrapper tournaments={tournaments} layout="grid" />
         </div>
       </main>
     </div>

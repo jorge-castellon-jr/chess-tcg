@@ -156,6 +156,7 @@ const TournamentList: React.FC<TournamentListProps> = ({
         ) : (
           filteredTournaments.map((tournament) => {
             const participantCount = tournament.results?.length || 0
+            const status = 'completed' // Default status - could be enhanced to calculate actual status
 
             return (
               <div
