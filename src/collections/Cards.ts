@@ -1,4 +1,4 @@
-import { CollectionConfig } from 'payload/types'
+import { CollectionConfig } from 'payload'
 
 export const Cards: CollectionConfig = {
   slug: 'cards',
@@ -15,11 +15,16 @@ export const Cards: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
     },
-    // {
-    //   name: 'cardType',
-    //   type: 'select',
-    //   options: ['Piece', 'Tactic', 'King'],
-    // },
+    {
+      name: 'suit',
+      type: 'select',
+      options: ['Hearts', 'Diamonds', 'Clubs', 'Spades'],
+    },
+    {
+      name: 'type',
+      type: 'select',
+      options: ['Piece', 'Tactic', 'Queen', 'King'],
+    },
     // {
     //   name: 'materialValue',
     //   type: 'number',
@@ -65,4 +70,3 @@ export const Cards: CollectionConfig = {
     // },
   ],
 }
-

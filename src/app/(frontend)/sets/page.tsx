@@ -1,4 +1,3 @@
-import { headers as getHeaders } from 'next/headers.js'
 import { getPayload } from 'payload'
 import React from 'react'
 import Link from 'next/link'
@@ -16,7 +15,6 @@ export const metadata = {
 }
 
 export default async function SetsPage() {
-  const headers = await getHeaders()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 

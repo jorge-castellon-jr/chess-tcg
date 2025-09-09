@@ -70,7 +70,7 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
     return matchesSearch
   })
 
-  const cardCounts = deck.cards.reduce(
+  const _cardCounts = deck.cards.reduce(
     (counts, card) => {
       counts[card.id.toString()] = (counts[card.id.toString()] || 0) + 1
       return counts

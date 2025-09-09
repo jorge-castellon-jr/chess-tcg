@@ -1,9 +1,7 @@
 import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import React from 'react'
-import { fileURLToPath } from 'url'
 
 import config from '@/payload.config'
 import ThemeToggle from '../../components/ThemeToggle'
@@ -13,7 +11,7 @@ export default async function HomePage() {
   const headers = await getHeaders()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+  await payload.auth({ headers })
 
   // Fetch some sample data to show on homepage
   let recentSets = null
@@ -106,9 +104,9 @@ export default async function HomePage() {
               {recentSets.docs.map((set: any) => (
                 <div key={set.id} className="set-preview-card">
                   <div className="set-date">
-                    {new Date(set.releaseDate).toLocaleDateString()}
+                    {new Date(set.releaseDate || '').toLocaleDateString()}
                   </div>
-                  <h3 className="set-name">{set.name}</h3>
+                  <h3 className="set-name">{set.name || 'Unnamed Set'}</h3>
                   <p className="set-description">
                     Explore the latest cards and mechanics
                   </p>
@@ -132,9 +130,9 @@ export default async function HomePage() {
                 {upcomingTournaments.docs.map((tournament: any) => (
                   <div key={tournament.id} className="tournament-preview-card">
                     <div className="tournament-date">
-                      {new Date(tournament.date).toLocaleDateString()}
+                      {new Date(tournament.date || '').toLocaleDateString()}
                     </div>
-                    <h3 className="tournament-name">{tournament.name}</h3>
+                    <h3 className="tournament-name">{tournament.name || 'Unnamed Tournament'}</h3>
                     <p className="tournament-description">
                       Join the competition and prove your skills
                     </p>

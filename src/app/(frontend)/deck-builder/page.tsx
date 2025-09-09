@@ -1,4 +1,3 @@
-import { headers as getHeaders } from 'next/headers.js'
 import { getPayload } from 'payload'
 import React from 'react'
 import Link from 'next/link'
@@ -7,19 +6,20 @@ import config from '@/payload.config'
 import DeckBuilder from '../../../components/DeckBuilder'
 import ThemeToggle from '../../../components/ThemeToggle'
 import styles from '../../../styles/PageLayout.module.scss'
+import { Metadata } from 'next'
+import { Card } from '@/payload-types'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Deck Builder - Chess TCG',
   description: 'Build and customize your perfect Chess Trading Card Game deck.',
 }
 
 export default async function DeckBuilderPage() {
-  const headers = await getHeaders()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
-  
+
   // Fetch all cards for deck building
-  let cards = []
+  let cards: Card[] = []
   try {
     const result = await payload.find({
       collection: 'cards',
@@ -34,7 +34,7 @@ export default async function DeckBuilderPage() {
   return (
     <div className={styles.page}>
       <ThemeToggle />
-      
+
       <header className={styles.pageHeader}>
         <nav className={styles.pageNavWide}>
           <Link href="/" className={styles.homeLink}>
@@ -48,8 +48,9 @@ export default async function DeckBuilderPage() {
         <div className={styles.contentContainer}>
           <div className={`${styles.pageIntro} ${styles.pageIntroWide}`}>
             <p>
-              Create your perfect Chess TCG deck by selecting cards from the available collection. 
-              Build strategic combinations of pieces, tactics, and kings to dominate the battlefield.
+              Create your perfect Chess TCG deck by selecting cards from the
+              available collection. Build strategic combinations of pieces,
+              tactics, and kings to dominate the battlefield.
             </p>
           </div>
 
@@ -60,8 +61,8 @@ export default async function DeckBuilderPage() {
               <div className={styles.noDataIcon}>⚒️</div>
               <h2>No Cards Available</h2>
               <p>
-                You need cards in the database to build decks. Add some cards through 
-                the admin panel to start building your collection.
+                You need cards in the database to build decks. Add some cards
+                through the admin panel to start building your collection.
               </p>
               <div className={styles.actionButtons}>
                 <Link href="/admin" className={styles.adminLink}>

@@ -18,7 +18,7 @@ const Card: React.FC<CardProps> = ({
   onClick,
   selected = false,
   variant = 'default',
-  showDate = true,
+  showDate: _showDate = true,
   className = '',
 }) => {
   // Helper function to get image URL

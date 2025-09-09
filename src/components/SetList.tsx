@@ -46,11 +46,9 @@ const SetList: React.FC<SetListProps> = ({
   }
 
   useEffect(() => {
-    let filtered = sets.filter(
+    const filtered = sets.filter(
       (set) =>
-        set.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (set.description &&
-          set.description.toLowerCase().includes(searchTerm.toLowerCase()))
+        set.name?.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     // Sort sets
@@ -58,21 +56,23 @@ const SetList: React.FC<SetListProps> = ({
       switch (sortBy) {
         case 'date':
           return (
-            new Date(b.releaseDate).getTime() -
-            new Date(a.releaseDate).getTime()
+            new Date(b.releaseDate || '').getTime() -
+            new Date(a.releaseDate || '').getTime()
           )
         case 'cards':
-          return (b.cardCount || 0) - (a.cardCount || 0)
+          // Card count not available in current Set type
+          return 0
         case 'name':
         default:
-          return a.name.localeCompare(b.name)
+          return (a.name || '').localeCompare(b.name || '')
       }
     })
 
     setFilteredSets(filtered)
   }, [sets, searchTerm, sortBy])
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return 'Date TBD'
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -81,7 +81,8 @@ const SetList: React.FC<SetListProps> = ({
     })
   }
 
-  const getRelativeDate = (dateString: string) => {
+  const getRelativeDate = (dateString: string | null | undefined) => {
+    if (!dateString) return 'TBD'
     const date = new Date(dateString)
     const now = new Date()
     const diffTime = now.getTime() - date.getTime()
@@ -145,24 +146,18 @@ const SetList: React.FC<SetListProps> = ({
           filteredSets.map((set) => (
             <div
               key={set.id}
-              className={`set-item ${selectedSet === set.id ? 'selected' : ''}`}
+              className={`set-item ${selectedSet === set.id.toString() ? 'selected' : ''}`}
               onClick={() => onSetSelect?.(set)}
             >
               <div className="set-image-container">
-                {set.image ? (
-                  <img src={set.image} alt={set.name} className="set-image" />
-                ) : (
-                  <div className="set-image-placeholder">
-                    <span className="set-icon">🎴</span>
-                  </div>
-                )}
-                {set.cardCount && (
-                  <div className="card-count-badge">{set.cardCount} cards</div>
-                )}
+                <div className="set-image-placeholder">
+                  <span className="set-icon">🎴</span>
+                </div>
+                {/* Card count not available in current Set type */}
               </div>
 
               <div className="set-content">
-                <h3 className="set-name">{set.name}</h3>
+                <h3 className="set-name">{set.name || 'Unnamed Set'}</h3>
 
                 <div className="set-date">
                   <span className="date-full">
@@ -173,10 +168,6 @@ const SetList: React.FC<SetListProps> = ({
                   </span>
                 </div>
 
-                {set.description && (
-                  <p className="set-description">{set.description}</p>
-                )}
-
                 <div className="set-stats">
                   <div className="stat">
                     <span className="stat-icon">📅</span>
@@ -184,12 +175,6 @@ const SetList: React.FC<SetListProps> = ({
                       {getRelativeDate(set.releaseDate)}
                     </span>
                   </div>
-                  {set.cardCount && (
-                    <div className="stat">
-                      <span className="stat-icon">🎯</span>
-                      <span className="stat-text">{set.cardCount} cards</span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

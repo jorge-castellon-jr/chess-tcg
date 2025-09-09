@@ -65,7 +65,7 @@ const CardList: React.FC<CardListProps> = ({
   }, [searchInput, searchTerm, updateUrlParams])
 
   useEffect(() => {
-    let filtered = cards.filter((card) =>
+    const filtered = cards.filter((card) =>
       card.name?.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
