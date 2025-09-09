@@ -133,6 +133,8 @@ export interface Card {
   id: number;
   name?: string | null;
   image?: (number | null) | Media;
+  suit?: ('Hearts' | 'Diamonds' | 'Clubs' | 'Spades' | 'Neutral') | null;
+  type?: ('Piece' | 'Tactic' | 'Queen' | 'King') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -305,6 +307,8 @@ export interface PayloadMigration {
 export interface CardsSelect<T extends boolean = true> {
   name?: T;
   image?: T;
+  suit?: T;
+  type?: T;
   updatedAt?: T;
   createdAt?: T;
 }

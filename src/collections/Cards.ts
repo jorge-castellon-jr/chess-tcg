@@ -18,7 +18,7 @@ export const Cards: CollectionConfig = {
     {
       name: 'suit',
       type: 'select',
-      options: ['Hearts', 'Diamonds', 'Clubs', 'Spades'],
+      options: ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Neutral'],
     },
     {
       name: 'type',
