@@ -258,6 +258,53 @@ svg {
   line-height: 1.4;
 }
 
+/* Game Resources Card */
+.resources-card {
+  grid-column: 1 / -1;
+}
+
+.resources-card .resource-links {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.resource-link {
+  display: inline-block;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.resource-link:hover {
+  background: var(--link-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* Mobile responsive for resource links */
+@media (max-width: 768px) {
+  .resources-card .resource-links {
+    flex-direction: column;
+  }
+  
+  .resource-link {
+    flex: none;
+  }
+}
+
 /* Main Content */
 .main-content {
   max-width: 1200px;

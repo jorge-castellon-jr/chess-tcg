@@ -87,6 +87,37 @@ export default async function HomePage() {
               <h3>Deck Builder</h3>
               <p>Create and customize your perfect deck</p>
             </Link>
+            <div className="nav-card resources-card">
+              <div className="nav-icon">🎮</div>
+              <h3>Game Resources</h3>
+              <p>Play digitally or print at home</p>
+              <div className="resource-links">
+                <a
+                  href="https://steamcommunity.com/sharedfiles/filedetails/?id=3558473670"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="resource-link"
+                >
+                  TTS Game Mod
+                </a>
+                <a
+                  href="https://steamcommunity.com/sharedfiles/filedetails/?id=3558511686"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="resource-link"
+                >
+                  TTS Deckbuilder
+                </a>
+                <a
+                  href="https://handcraftgames.itch.io/chesstcg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="resource-link"
+                >
+                  Print & Play
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </nav>
@@ -132,7 +163,9 @@ export default async function HomePage() {
                     <div className="tournament-date">
                       {new Date(tournament.date || '').toLocaleDateString()}
                     </div>
-                    <h3 className="tournament-name">{tournament.name || 'Unnamed Tournament'}</h3>
+                    <h3 className="tournament-name">
+                      {tournament.name || 'Unnamed Tournament'}
+                    </h3>
                     <p className="tournament-description">
                       Join the competition and prove your skills
                     </p>
@@ -202,13 +235,37 @@ export default async function HomePage() {
             <Link href="/tournaments">Tournaments</Link>
             <Link href="/deck-builder">Deck Builder</Link>
           </div>
-          {/* <div className="footer-section"> */}
-          {/*   <h4>Admin</h4> */}
-          {/*   <a href={payloadConfig.routes.admin} target="_blank" rel="noopener noreferrer"> */}
-          {/*     Admin Panel */}
-          {/*   </a> */}
-          {/*   {user && <span className="user-info">Logged in as {user.email}</span>} */}
-          {/* </div> */}
+          <div className="footer-section">
+            <h4>Resources</h4>
+            <a
+              href="https://steamcommunity.com/sharedfiles/filedetails/?id=3558473670"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TTS Game Mod
+            </a>
+            <a
+              href="https://steamcommunity.com/sharedfiles/filedetails/?id=3558511686"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TTS Deckbuilder
+            </a>
+            <a
+              href="https://handcraftgames.itch.io/chesstcg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Print & Play
+            </a>
+            <a
+              href={payloadConfig.routes.admin}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Admin Panel
+            </a>
+          </div>
         </div>
       </footer>
     </div>

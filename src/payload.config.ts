@@ -26,6 +26,11 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    livePreview: {
+      url: ({ collectionConfig }) =>
+        `http://localhost:3000/${collectionConfig ? collectionConfig.slug : ''}`,
+      collections: ['cards'],
+    },
   },
   collections: [Cards, Sets, Tournaments, Decks, Users, Media],
   globals: [Rules],
