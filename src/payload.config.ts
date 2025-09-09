@@ -51,7 +51,7 @@ export default buildConfig({
     // storage-adapter-placeholder
     s3Storage({
       collections: {
-        media: true,
+        cards: true,
       },
       bucket: process.env.S3_BUCKET || '',
       config: {

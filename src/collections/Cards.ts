@@ -9,26 +9,25 @@ export const Cards: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
-    },
-    {
-      name: 'image',
-      type: 'upload',
-      relationTo: 'media',
+      required: true,
     },
     {
       name: 'suit',
       type: 'select',
       options: ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Neutral'],
+      required: true,
     },
     {
       name: 'type',
       type: 'select',
       options: ['Piece', 'Tactic', 'Queen', 'King'],
+      required: true,
     },
     {
       name: 'set',
       type: 'relationship',
       relationTo: 'sets',
+      required: true,
     },
     // {
     //   name: 'materialValue',
