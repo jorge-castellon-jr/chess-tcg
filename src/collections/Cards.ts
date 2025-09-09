@@ -22,13 +22,14 @@ export const Cards: CollectionConfig = {
       name: 'type',
       type: 'select',
       options: ['Piece', 'Tactic'],
-      defaultValue: 'Neutral',
+      defaultValue: 'Piece',
       required: true,
     },
     {
       name: 'pieceType',
       type: 'select',
       options: ['Basic', 'Queen', 'King'],
+      defaultValue: 'Basic',
       admin: {
         condition: (data) => data.type === 'Piece',
       },
