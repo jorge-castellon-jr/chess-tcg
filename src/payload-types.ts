@@ -135,6 +135,7 @@ export interface Card {
   image?: (number | null) | Media;
   suit?: ('Hearts' | 'Diamonds' | 'Clubs' | 'Spades' | 'Neutral') | null;
   type?: ('Piece' | 'Tactic' | 'Queen' | 'King') | null;
+  set?: (number | null) | Set;
   updatedAt: string;
   createdAt: string;
 }
@@ -309,6 +310,7 @@ export interface CardsSelect<T extends boolean = true> {
   image?: T;
   suit?: T;
   type?: T;
+  set?: T;
   updatedAt?: T;
   createdAt?: T;
 }

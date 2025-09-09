@@ -25,6 +25,11 @@ export const Cards: CollectionConfig = {
       type: 'select',
       options: ['Piece', 'Tactic', 'Queen', 'King'],
     },
+    {
+      name: 'set',
+      type: 'relationship',
+      relationTo: 'sets',
+    },
     // {
     //   name: 'materialValue',
     //   type: 'number',
@@ -62,11 +67,6 @@ export const Cards: CollectionConfig = {
     //   admin: {
     //     condition: (data) => data.cardType === 'Tactic',
     //   },
-    // },
-    // {
-    //   name: 'set',
-    //   type: 'relationship',
-    //   relationTo: 'sets',
     // },
   ],
 }

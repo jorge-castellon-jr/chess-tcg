@@ -1,3 +1,4 @@
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { GlobalConfig } from 'payload'
 
 export const Rules: GlobalConfig = {
@@ -6,6 +7,8 @@ export const Rules: GlobalConfig = {
     {
       name: 'content',
       type: 'richText',
+      editor: lexicalEditor({}),
     },
   ],
 }
+

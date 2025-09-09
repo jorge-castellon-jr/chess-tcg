@@ -27,8 +27,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     livePreview: {
-      url: ({ collectionConfig }) =>
-        `http://localhost:3000/${collectionConfig ? collectionConfig.slug : ''}`,
+      url: ({ data, collectionConfig }) =>
+        `${data.tenant.url}${collectionConfig ? collectionConfig.slug : ''}`,
       collections: ['cards'],
     },
   },
@@ -61,7 +61,6 @@ export default buildConfig({
         },
         endpoint: process.env.S3_ENDPOINT || '',
         region: 'auto',
-        // ... Other S3 configuration
       },
     }),
   ],

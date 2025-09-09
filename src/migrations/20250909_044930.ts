@@ -1,23 +1,20 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-sqlite'
 
-export async function up({ db, payload: _payload, req: _req }: MigrateUpArgs): Promise<void> {
+export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE TABLE \`cards\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`name\` text,
-  	\`card_type\` text,
-  	\`material_value\` numeric,
-  	\`cost\` numeric,
-  	\`attack\` numeric,
-  	\`health\` numeric,
-  	\`effects\` text,
-  	\`tactic_type\` text,
+  	\`image_id\` integer,
+  	\`suit\` text,
+  	\`type\` text,
   	\`set_id\` integer,
-  	\`image\` text,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
   	FOREIGN KEY (\`set_id\`) REFERENCES \`sets\`(\`id\`) ON UPDATE no action ON DELETE set null
   );
   `)
+  await db.run(sql`CREATE INDEX \`cards_image_idx\` ON \`cards\` (\`image_id\`);`)
   await db.run(sql`CREATE INDEX \`cards_set_idx\` ON \`cards\` (\`set_id\`);`)
   await db.run(sql`CREATE INDEX \`cards_updated_at_idx\` ON \`cards\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`cards_created_at_idx\` ON \`cards\` (\`created_at\`);`)
@@ -123,7 +120,7 @@ export async function up({ db, payload: _payload, req: _req }: MigrateUpArgs): P
   await db.run(sql`CREATE UNIQUE INDEX \`users_email_idx\` ON \`users\` (\`email\`);`)
   await db.run(sql`CREATE TABLE \`media\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`alt\` text NOT NULL,
+  	\`alt\` text,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`url\` text,
@@ -223,7 +220,7 @@ export async function up({ db, payload: _payload, req: _req }: MigrateUpArgs): P
   `)
 }
 
-export async function down({ db, payload: _payload, req: _req }: MigrateDownArgs): Promise<void> {
+export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
   await db.run(sql`DROP TABLE \`cards\`;`)
   await db.run(sql`DROP TABLE \`sets\`;`)
   await db.run(sql`DROP TABLE \`tournaments_results\`;`)

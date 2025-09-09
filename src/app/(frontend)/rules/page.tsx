@@ -6,6 +6,7 @@ import config from '@/payload.config'
 import ThemeToggle from '../../../components/ThemeToggle'
 import styles from './RulesPage.module.scss'
 import { Metadata } from 'next'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 
 export const metadata: Metadata = {
   title: 'Game Rules - Chess TCG',
@@ -42,10 +43,9 @@ export default async function RulesPage() {
       <main className={styles.rulesContent}>
         <div className={styles.rulesContainer}>
           {rules && rules.content ? (
-            <div
-              className={styles.rulesText}
-              dangerouslySetInnerHTML={{ __html: rules.content }}
-            />
+            <div className={styles.rulesText}>
+              <RichText data={rules.content} />
+            </div>
           ) : (
             <div className={styles.noRules}>
               <div className={styles.noRulesIcon}>📖</div>
@@ -63,7 +63,9 @@ export default async function RulesPage() {
                   <li>
                     Use tactics to enhance your pieces or disrupt opponents
                   </li>
-                  <li>Protect your King while capturing your opponent&apos;s</li>
+                  <li>
+                    Protect your King while capturing your opponent&apos;s
+                  </li>
                 </ul>
               </div>
             </div>

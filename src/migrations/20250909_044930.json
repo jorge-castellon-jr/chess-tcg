@@ -40,6 +40,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "set_id": {
+          "name": "set_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
@@ -65,6 +72,13 @@
           ],
           "isUnique": false
         },
+        "cards_set_idx": {
+          "name": "cards_set_idx",
+          "columns": [
+            "set_id"
+          ],
+          "isUnique": false
+        },
         "cards_updated_at_idx": {
           "name": "cards_updated_at_idx",
           "columns": [
@@ -87,6 +101,19 @@
           "tableTo": "media",
           "columnsFrom": [
             "image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cards_set_id_sets_id_fk": {
+          "name": "cards_set_id_sets_id_fk",
+          "tableFrom": "cards",
+          "tableTo": "sets",
+          "columnsFrom": [
+            "set_id"
           ],
           "columnsTo": [
             "id"
@@ -1479,6 +1506,6 @@
   "internal": {
     "indexes": {}
   },
-  "id": "ba702a34-4671-4972-83d3-b6232710d009",
+  "id": "04732308-0419-48d9-a55e-c16620dec539",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
