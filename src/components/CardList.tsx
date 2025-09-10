@@ -26,6 +26,10 @@ const CardList: React.FC<CardListProps> = ({
   // Get state from URL params
   const searchTerm = searchParams.get('search') || ''
   const sortBy = (searchParams.get('sort') as 'name' | 'date') || 'name'
+  const classFilter = searchParams.get('class') || ''
+  const typeFilter = searchParams.get('type') || ''
+  const pieceTypeFilter = searchParams.get('pieceType') || ''
+  const setFilter = searchParams.get('set') || ''
 
   // Local state for search input (for debouncing)
   const [searchInput, setSearchInput] = useState(searchTerm)
@@ -37,7 +41,14 @@ const CardList: React.FC<CardListProps> = ({
 
   // Function to update URL params
   const updateUrlParams = useCallback(
-    (updates: { search?: string; sort?: string }) => {
+    (updates: { 
+      search?: string; 
+      sort?: string; 
+      class?: string;
+      type?: string;
+      pieceType?: string;
+      set?: string;
+    }) => {
       const params = new URLSearchParams(searchParams.toString())
 
       Object.entries(updates).forEach(([key, value]) => {
@@ -65,9 +76,15 @@ const CardList: React.FC<CardListProps> = ({
   }, [searchInput, searchTerm, updateUrlParams])
 
   useEffect(() => {
-    const filtered = cards.filter((card) =>
-      card.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    const filtered = cards.filter((card) => {
+      const matchesSearch = card.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesClass = !classFilter || card.class === classFilter
+      const matchesType = !typeFilter || card.type === typeFilter
+      const matchesPieceType = !pieceTypeFilter || card.pieceType === pieceTypeFilter
+      const matchesSet = !setFilter || (typeof card.set === 'object' ? card.set?.name === setFilter : false)
+      
+      return matchesSearch && matchesClass && matchesType && matchesPieceType && matchesSet
+    })
 
     // Sort cards
     filtered.sort((a, b) => {
@@ -83,7 +100,7 @@ const CardList: React.FC<CardListProps> = ({
     })
 
     setFilteredCards(filtered)
-  }, [cards, searchTerm, sortBy])
+  }, [cards, searchTerm, sortBy, classFilter, typeFilter, pieceTypeFilter, setFilter])
 
   return (
     <div className={styles.cardList}>
@@ -96,6 +113,53 @@ const CardList: React.FC<CardListProps> = ({
             onChange={(e) => setSearchInput(e.target.value)}
             className={styles.searchInput}
           />
+
+          <select
+            value={classFilter}
+            onChange={(e) => updateUrlParams({ class: e.target.value })}
+            className={styles.filterSelect}
+          >
+            <option value="">All Classes</option>
+            <option value="Neutral">Neutral</option>
+            <option value="Hearts">Hearts</option>
+            <option value="Diamonds">Diamonds</option>
+            <option value="Clubs">Clubs</option>
+            <option value="Spades">Spades</option>
+          </select>
+
+          <select
+            value={typeFilter}
+            onChange={(e) => updateUrlParams({ type: e.target.value })}
+            className={styles.filterSelect}
+          >
+            <option value="">All Types</option>
+            <option value="Piece">Piece</option>
+            <option value="Tactic">Tactic</option>
+          </select>
+
+          <select
+            value={pieceTypeFilter}
+            onChange={(e) => updateUrlParams({ pieceType: e.target.value })}
+            className={styles.filterSelect}
+          >
+            <option value="">All Piece Types</option>
+            <option value="Basic">Basic</option>
+            <option value="Queen">Queen</option>
+            <option value="King">King</option>
+          </select>
+
+          <select
+            value={setFilter}
+            onChange={(e) => updateUrlParams({ set: e.target.value })}
+            className={styles.filterSelect}
+          >
+            <option value="">All Sets</option>
+            {Array.from(new Set(cards.map(card => 
+              typeof card.set === 'object' ? card.set?.name : null
+            ).filter(Boolean) as string[])).map(setName => (
+              <option key={setName} value={setName}>{setName}</option>
+            ))}
+          </select>
 
           <select
             value={sortBy}
