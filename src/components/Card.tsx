@@ -23,7 +23,9 @@ const Card: React.FC<CardProps> = ({
 }) => {
   // Helper function to get image URL
   const getImageUrl = (card: CardType): string | null => {
-    return card.filename ? `${process.env.R2_PUBLIC_URL}${card.filename}` : null
+    return card.filename
+      ? `${process.env.NEXT_PUBLIC_R2_URL}${card.filename}`
+      : null
   }
 
   // Helper function to get image alt text
