@@ -16,25 +16,27 @@
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "image_id": {
-          "name": "image_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "suit": {
           "name": "suit",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Neutral'"
         },
         "type": {
           "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Neutral'"
+        },
+        "piece_type": {
+          "name": "piece_type",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -44,7 +46,7 @@
           "name": "set_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "updated_at": {
@@ -62,16 +64,72 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "thumbnail_u_r_l": {
+          "name": "thumbnail_u_r_l",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filesize": {
+          "name": "filesize",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "focal_x": {
+          "name": "focal_x",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "focal_y": {
+          "name": "focal_y",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
-        "cards_image_idx": {
-          "name": "cards_image_idx",
-          "columns": [
-            "image_id"
-          ],
-          "isUnique": false
-        },
         "cards_set_idx": {
           "name": "cards_set_idx",
           "columns": [
@@ -92,22 +150,16 @@
             "created_at"
           ],
           "isUnique": false
+        },
+        "cards_filename_idx": {
+          "name": "cards_filename_idx",
+          "columns": [
+            "filename"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {
-        "cards_image_id_media_id_fk": {
-          "name": "cards_image_id_media_id_fk",
-          "tableFrom": "cards",
-          "tableTo": "media",
-          "columnsFrom": [
-            "image_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
         "cards_set_id_sets_id_fk": {
           "name": "cards_set_id_sets_id_fk",
           "tableFrom": "cards",
@@ -813,13 +865,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "alt": {
-          "name": "alt",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
@@ -1506,6 +1551,6 @@
   "internal": {
     "indexes": {}
   },
-  "id": "04732308-0419-48d9-a55e-c16620dec539",
+  "id": "dc94cdbc-be3b-41ed-99f9-8a34e99cbcd8",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

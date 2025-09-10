@@ -3,21 +3,29 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-sqlite'
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE TABLE \`cards\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`name\` text,
-  	\`image_id\` integer,
-  	\`suit\` text,
-  	\`type\` text,
-  	\`set_id\` integer,
+  	\`name\` text NOT NULL,
+  	\`suit\` text DEFAULT 'Neutral' NOT NULL,
+  	\`type\` text DEFAULT 'Neutral' NOT NULL,
+  	\`piece_type\` text,
+  	\`set_id\` integer NOT NULL,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-  	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	\`url\` text,
+  	\`thumbnail_u_r_l\` text,
+  	\`filename\` text,
+  	\`mime_type\` text,
+  	\`filesize\` numeric,
+  	\`width\` numeric,
+  	\`height\` numeric,
+  	\`focal_x\` numeric,
+  	\`focal_y\` numeric,
   	FOREIGN KEY (\`set_id\`) REFERENCES \`sets\`(\`id\`) ON UPDATE no action ON DELETE set null
   );
   `)
-  await db.run(sql`CREATE INDEX \`cards_image_idx\` ON \`cards\` (\`image_id\`);`)
   await db.run(sql`CREATE INDEX \`cards_set_idx\` ON \`cards\` (\`set_id\`);`)
   await db.run(sql`CREATE INDEX \`cards_updated_at_idx\` ON \`cards\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`cards_created_at_idx\` ON \`cards\` (\`created_at\`);`)
+  await db.run(sql`CREATE UNIQUE INDEX \`cards_filename_idx\` ON \`cards\` (\`filename\`);`)
   await db.run(sql`CREATE TABLE \`sets\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`name\` text,
@@ -120,7 +128,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE UNIQUE INDEX \`users_email_idx\` ON \`users\` (\`email\`);`)
   await db.run(sql`CREATE TABLE \`media\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`alt\` text,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`url\` text,
