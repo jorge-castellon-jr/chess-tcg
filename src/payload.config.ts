@@ -50,9 +50,7 @@ export default buildConfig({
     payloadCloudPlugin(),
     // storage-adapter-placeholder
     s3Storage({
-      collections: {
-        cards: true,
-      },
+      collections: {},
       bucket: process.env.S3_BUCKET || '',
       config: {
         credentials: {
