@@ -6,51 +6,10 @@ export const Cards: CollectionConfig = {
     useAsTitle: 'name',
   },
   upload: {
+    adapter: 's3',
     mimeTypes: ['image/*'],
     displayPreview: true,
     disableLocalStorage: true,
-  },
-  hooks: {
-    beforeChange: [
-      ({ req, data }) => {
-        if (!req.file) return data
-
-        const publicUrl = process.env.R2_PUBLIC_URL
-        if (!publicUrl) {
-          throw new Error('R2_PUBLIC_URL environment variable is not set.')
-        }
-
-        const sanitizedPublicUrl = publicUrl.replace(/\/$/, '')
-        const imageUrl = `${sanitizedPublicUrl}/${data.filename}`
-        console.log('sanitizedPublicUrl', imageUrl)
-
-        return {
-          ...data,
-          url: imageUrl,
-          thumbnailURL: imageUrl,
-        }
-      },
-    ],
-    beforeRead: [
-      ({ doc }) => {
-        console.log('beforeRead', doc)
-        if (doc.url && doc.thumbnailURL) return doc
-
-        const publicUrl = process.env.R2_PUBLIC_URL
-        if (!publicUrl) {
-          throw new Error('R2_PUBLIC_URL environment variable is not set.')
-        }
-
-        const sanitizedPublicUrl = publicUrl.replace(/\/$/, '')
-        const imageUrl = `${sanitizedPublicUrl}/${doc.filename}`
-        console.log('sanitizedPublicUrl', imageUrl)
-        return {
-          ...doc,
-          url: imageUrl,
-          thumbnailURL: imageUrl,
-        }
-      },
-    ],
   },
   fields: [
     {
