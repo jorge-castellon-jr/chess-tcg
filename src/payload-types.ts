@@ -154,8 +154,9 @@ export interface Card {
  */
 export interface Set {
   id: number;
-  name?: string | null;
-  releaseDate?: string | null;
+  name: string;
+  releaseDate: string;
+  preview?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -338,6 +339,7 @@ export interface CardsSelect<T extends boolean = true> {
 export interface SetsSelect<T extends boolean = true> {
   name?: T;
   releaseDate?: T;
+  preview?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -9,10 +9,18 @@ export const Sets: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
+      required: true,
     },
     {
       name: 'releaseDate',
       type: 'date',
+      required: true,
+    },
+    {
+      name: 'preview',
+      type: 'checkbox',
+      defaultValue: false,
     },
   ],
 }
+

@@ -27,7 +27,12 @@ export default async function CardsPage() {
       limit: 1000, // Adjust as needed
       depth: 1, // Include image data
     })
-    cards = result.docs
+    cards = result.docs.filter((card) => {
+      if (typeof card.set === 'number') return true
+      if (card.set.preview) return true
+      console.log('card', card)
+      return new Date(card.set.releaseDate) <= new Date()
+    })
   } catch (error) {
     console.error('Error fetching cards:', error)
   }
