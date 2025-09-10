@@ -28,7 +28,7 @@ export default buildConfig({
     },
     livePreview: {
       url: ({ data, collectionConfig }) =>
-        `${data.tenant?.url || 'http://localhost:3000/'}${collectionConfig ? collectionConfig.slug : ''}?search=${data.name}`,
+        `${process.env.VERCEL === '1' ? 'https://chess-tcg.handcraft.games/' : 'http://localhost:3000/'}${collectionConfig ? collectionConfig.slug : ''}?search=${data.name}`,
       collections: ['cards'],
     },
   },
