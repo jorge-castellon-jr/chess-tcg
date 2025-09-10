@@ -3080,7 +3080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@payloadcms/email-resend@npm:^3.54.0":
+"@payloadcms/email-resend@npm:3.54.0":
   version: 3.54.0
   resolution: "@payloadcms/email-resend@npm:3.54.0"
   peerDependencies:
@@ -3206,7 +3206,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@payloadcms/storage-s3@npm:^3.54.0":
+"@payloadcms/storage-s3@npm:3.54.0":
   version: 3.54.0
   resolution: "@payloadcms/storage-s3@npm:3.54.0"
   dependencies:
@@ -9898,11 +9898,11 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@payloadcms/db-sqlite": "npm:3.54.0"
-    "@payloadcms/email-resend": "npm:^3.54.0"
+    "@payloadcms/email-resend": "npm:3.54.0"
     "@payloadcms/next": "npm:3.54.0"
     "@payloadcms/payload-cloud": "npm:3.54.0"
     "@payloadcms/richtext-lexical": "npm:3.54.0"
-    "@payloadcms/storage-s3": "npm:^3.54.0"
+    "@payloadcms/storage-s3": "npm:3.54.0"
     "@payloadcms/ui": "npm:3.54.0"
     "@playwright/test": "npm:1.54.1"
     "@testing-library/react": "npm:16.3.0"
