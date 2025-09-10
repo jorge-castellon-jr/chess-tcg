@@ -28,7 +28,7 @@ export default buildConfig({
     },
     livePreview: {
       url: ({ data, collectionConfig }) =>
-        `${data.tenant.url}${collectionConfig ? collectionConfig.slug : ''}`,
+        `${data.tenant?.url || 'http://localhost:3000/'}${collectionConfig ? collectionConfig.slug : ''}?search=${data.name}`,
       collections: ['cards'],
     },
   },
