@@ -18,7 +18,7 @@ export const Cards: CollectionConfig = {
       required: true,
     },
     {
-      name: 'suit',
+      name: 'class',
       type: 'select',
       options: ['Neutral', 'Hearts', 'Diamonds', 'Clubs', 'Spades'],
       defaultValue: 'Neutral',

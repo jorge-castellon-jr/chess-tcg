@@ -132,7 +132,7 @@ export interface UserAuthOperations {
 export interface Card {
   id: number;
   name: string;
-  suit: 'Neutral' | 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades';
+  class: 'Neutral' | 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades';
   type: 'Piece' | 'Tactic';
   pieceType?: ('Basic' | 'Queen' | 'King') | null;
   set: number | Set;
@@ -316,7 +316,7 @@ export interface PayloadMigration {
  */
 export interface CardsSelect<T extends boolean = true> {
   name?: T;
-  suit?: T;
+  class?: T;
   type?: T;
   pieceType?: T;
   set?: T;
