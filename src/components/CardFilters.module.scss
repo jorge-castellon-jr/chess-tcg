@@ -1,0 +1,45 @@
+.cardFilters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.searchInput,
+.filterSelect,
+.sortSelect {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filterSelect {
+  min-width: 120px;
+}
+
+.searchInput:focus,
+.filterSelect:focus,
+.sortSelect:focus {
+  outline: none;
+  border-color: var(--link-color);
+}
+
+@media (max-width: 768px) {
+  .cardFilters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchInput {
+    min-width: unset;
+  }
+}

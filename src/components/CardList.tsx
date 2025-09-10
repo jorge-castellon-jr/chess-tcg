@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card as CardType } from '@/payload-types'
 import Card from './Card'
+import CardFilters from './CardFilters'
 import styles from './CardList.module.scss'
 
 interface CardListProps {
@@ -105,71 +106,23 @@ const CardList: React.FC<CardListProps> = ({
   return (
     <div className={styles.cardList}>
       {showFilters && (
-        <div className={styles.cardListFilters}>
-          <input
-            type="text"
-            placeholder="Search cards..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className={styles.searchInput}
-          />
-
-          <select
-            value={classFilter}
-            onChange={(e) => updateUrlParams({ class: e.target.value })}
-            className={styles.filterSelect}
-          >
-            <option value="">All Classes</option>
-            <option value="Neutral">Neutral</option>
-            <option value="Hearts">Hearts</option>
-            <option value="Diamonds">Diamonds</option>
-            <option value="Clubs">Clubs</option>
-            <option value="Spades">Spades</option>
-          </select>
-
-          <select
-            value={typeFilter}
-            onChange={(e) => updateUrlParams({ type: e.target.value })}
-            className={styles.filterSelect}
-          >
-            <option value="">All Types</option>
-            <option value="Piece">Piece</option>
-            <option value="Tactic">Tactic</option>
-          </select>
-
-          <select
-            value={pieceTypeFilter}
-            onChange={(e) => updateUrlParams({ pieceType: e.target.value })}
-            className={styles.filterSelect}
-          >
-            <option value="">All Piece Types</option>
-            <option value="Basic">Basic</option>
-            <option value="Queen">Queen</option>
-            <option value="King">King</option>
-          </select>
-
-          <select
-            value={setFilter}
-            onChange={(e) => updateUrlParams({ set: e.target.value })}
-            className={styles.filterSelect}
-          >
-            <option value="">All Sets</option>
-            {Array.from(new Set(cards.map(card => 
-              typeof card.set === 'object' ? card.set?.name : null
-            ).filter(Boolean) as string[])).map(setName => (
-              <option key={setName} value={setName}>{setName}</option>
-            ))}
-          </select>
-
-          <select
-            value={sortBy}
-            onChange={(e) => updateUrlParams({ sort: e.target.value })}
-            className={styles.sortSelect}
-          >
-            <option value="name">Sort by Name</option>
-            <option value="date">Sort by Date Created</option>
-          </select>
-        </div>
+        <CardFilters
+          searchTerm={searchInput}
+          onSearchChange={setSearchInput}
+          showClassFilter={true}
+          classFilter={classFilter}
+          onClassChange={(value) => updateUrlParams({ class: value })}
+          typeFilter={typeFilter}
+          onTypeChange={(value) => updateUrlParams({ type: value })}
+          pieceTypeFilter={pieceTypeFilter}
+          onPieceTypeChange={(value) => updateUrlParams({ pieceType: value })}
+          setFilter={setFilter}
+          onSetChange={(value) => updateUrlParams({ set: value })}
+          showSortBy={true}
+          sortBy={sortBy}
+          onSortChange={(value) => updateUrlParams({ sort: value })}
+          availableCards={cards}
+        />
       )}
 
       <div className={styles.cardsGrid}>
