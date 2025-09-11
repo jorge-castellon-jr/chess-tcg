@@ -46,14 +46,6 @@ export default async function DeckBuilderPage() {
 
       <main className={styles.pageContentWide}>
         <div className={styles.contentContainer}>
-          <div className={`${styles.pageIntro} ${styles.pageIntroWide}`}>
-            <p>
-              Create your perfect Chess TCG deck by selecting cards from the
-              available collection. Build strategic combinations of pieces,
-              tactics, and kings to dominate the battlefield.
-            </p>
-          </div>
-
           {cards.length > 0 ? (
             <DeckBuilder availableCards={cards} />
           ) : (

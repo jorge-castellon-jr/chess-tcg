@@ -46,19 +46,21 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
       } else {
         // Set the king and automatically add it to deck
         setSelectedKing(card)
-        
+
         // Auto-add king to deck if not already there
         setDeck((prev) => {
-          const hasKing = prev.cards.some(deckCard => deckCard.card.pieceType === 'King')
+          const hasKing = prev.cards.some(
+            (deckCard) => deckCard.card.pieceType === 'King'
+          )
           if (!hasKing) {
             return {
               ...prev,
-              cards: [...prev.cards, { card, quantity: 1 }]
+              cards: [...prev.cards, { card, quantity: 1 }],
             }
           }
           return prev
         })
-        
+
         setErrors([])
         return // Don't continue with normal adding logic
       }
@@ -78,12 +80,18 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
       }
     }
 
-    // Check card limit (max 3 copies)
+    // Check card limit (different limits for different card types)
     const existingCard = deck.cards.find(
       (deckCard) => deckCard.card.id === card.id
     )
-    if (existingCard && existingCard.quantity >= 3) {
-      newErrors.push('Maximum 3 copies of any card allowed')
+    if (existingCard) {
+      const maxAllowed = card.type === 'Tactic' ? 2 : 3
+      if (existingCard.quantity >= maxAllowed) {
+        const limitText = card.type === 'Tactic' ? '2 copies' : '3 copies'
+        newErrors.push(
+          `Maximum ${limitText} of any ${card.type.toLowerCase()} card allowed`
+        )
+      }
     }
 
     if (newErrors.length > 0) {
@@ -318,7 +326,8 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
             {filteredCards.map((card) => {
               const deckCard = deck.cards.find((dc) => dc.card.id === card.id)
               const quantity = deckCard ? deckCard.quantity : 0
-              const isMaxed = quantity >= 3
+              const maxAllowed = card.type === 'Tactic' ? 2 : 3
+              const isMaxed = quantity >= maxAllowed
               const isQueen = card.pieceType === 'Queen'
               const queenMaxed = isQueen && queenCount >= 1
               const isSelectedKing = selectedKing && card.id === selectedKing.id
@@ -338,9 +347,17 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
                   {quantity > 0 && !isSelectedKing && (
                     <div className="card-quantity-badge">{quantity}</div>
                   )}
-                  {isMaxed && <div className="max-overlay">MAX (3)</div>}
-                  {queenMaxed && !isMaxed && <div className="max-overlay">MAX QUEEN</div>}
-                  {isSelectedKing && <div className="max-overlay">SELECTED</div>}
+                  {isMaxed && !isSelectedKing && (
+                    <div className="max-overlay">
+                      {card.type === 'Tactic' ? 'MAX (2)' : 'MAX (3)'}
+                    </div>
+                  )}
+                  {queenMaxed && !isMaxed && (
+                    <div className="max-overlay">MAX QUEEN</div>
+                  )}
+                  {isSelectedKing && (
+                    <div className="max-overlay">SELECTED</div>
+                  )}
                 </div>
               )
             })}
@@ -392,7 +409,7 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
               <div className="deck-cards-grid">
                 {deck.cards.map((deckCard, index) => {
                   const isKing = deckCard.card.pieceType === 'King'
-                  
+
                   return (
                     <div
                       key={`${deckCard.card.id}-${index}`}
@@ -400,7 +417,8 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
                     >
                       <div className="deck-card-header">
                         <div className="deck-card-name">
-                          {isKing && '👑 '}{deckCard.card.name || 'Untitled Card'}
+                          {isKing && '👑 '}
+                          {deckCard.card.name || 'Untitled Card'}
                         </div>
                         <div className="card-controls">
                           {!isKing && (
@@ -411,7 +429,11 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
                           <button
                             onClick={() => removeCardFromDeck(index)}
                             className="remove-btn"
-                            title={isKing ? "Remove king (will reset deck)" : "Remove one copy"}
+                            title={
+                              isKing
+                                ? 'Remove king (will reset deck)'
+                                : 'Remove one copy'
+                            }
                           >
                             -
                           </button>
@@ -424,11 +446,7 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
                           <span>{deckCard.card.pieceType}</span>
                         )}
                       </div>
-                      {isKing && (
-                        <div className="king-overlay">
-                          UNIQUE
-                        </div>
-                      )}
+                      {isKing && <div className="king-overlay">UNIQUE</div>}
                     </div>
                   )
                 })}
@@ -462,6 +480,9 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
       <style jsx>{`
         .deck-builder {
           width: 100%;
+          height: calc(
+            100vh - 191px
+          ); /* Adjusted based on actual measurements */
           background: var(--bg-primary);
           border-radius: 12px;
           border: 1px solid var(--border-color);
@@ -471,7 +492,7 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
         .deck-builder-content {
           display: grid;
           grid-template-columns: 1fr 400px;
-          height: 800px;
+          height: 100%;
         }
 
         .available-cards-section {
@@ -479,6 +500,8 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
           border-right: 1px solid var(--border-color);
           display: flex;
           flex-direction: column;
+          height: 100%;
+          overflow: hidden;
         }
 
         .deck-section {
@@ -486,6 +509,8 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
           display: flex;
           flex-direction: column;
           background: var(--bg-secondary);
+          height: 100%;
+          overflow: hidden;
         }
 
         .section-title {
@@ -568,12 +593,16 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
 
         .cards-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          grid-template-columns: repeat(4, 1fr);
+          grid-auto-rows: max-content;
+          align-content: start;
           gap: 12px;
           flex: 1;
           overflow-y: auto;
+          overflow-x: hidden;
           padding-right: 8px;
-          max-height: 400px;
+          min-height: 0;
+          height: 0; /* Force height calculation */
         }
 
         .available-card {
@@ -581,16 +610,16 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
           background: var(--bg-primary);
           border: 1px solid var(--border-color);
           border-radius: 8px;
-          overflow: hidden;
           cursor: pointer;
           transition: all 0.2s ease;
+          aspect-ratio: 2.5 / 3.5; /* Playing card ratio */
         }
 
         .available-card.maxed-out {
           opacity: 0.6;
           cursor: not-allowed;
         }
-        
+
         .available-card.selected-king {
           border: 2px solid #ffd700;
           box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
@@ -731,8 +760,10 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
         .deck-cards {
           flex: 1;
           overflow-y: auto;
+          overflow-x: hidden;
           margin-bottom: 20px;
-          max-height: 400px;
+          min-height: 0;
+          height: 0; /* Force height calculation */
         }
 
         .empty-deck {
@@ -759,9 +790,14 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
           padding: 8px;
           position: relative;
         }
-        
+
         .deck-card.king-card {
-          background: linear-gradient(135deg, var(--bg-primary) 0%, #ffd700 10%, var(--bg-primary) 20%);
+          background: linear-gradient(
+            135deg,
+            var(--bg-primary) 0%,
+            #ffd700 10%,
+            var(--bg-primary) 20%
+          );
           border: 2px solid #ffd700;
           box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
@@ -823,7 +859,7 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
           border-radius: 3px;
           font-size: 10px;
         }
-        
+
         .king-overlay {
           position: absolute;
           bottom: 4px;
@@ -879,18 +915,24 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
         }
 
         @media (max-width: 1024px) {
+          .deck-builder {
+            height: calc(100vh - 65px); /* Adjusted for mobile */
+          }
+
           .deck-builder-content {
             grid-template-columns: 1fr;
-            height: auto;
+            grid-template-rows: 1fr 1fr; /* Split height between sections */
+            height: 100%;
           }
 
           .available-cards-section {
             border-right: none;
             border-bottom: 1px solid var(--border-color);
+            min-height: 0;
           }
 
-          .cards-grid {
-            max-height: 400px;
+          .deck-section {
+            min-height: 0;
           }
         }
 
