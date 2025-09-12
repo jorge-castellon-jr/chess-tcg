@@ -131,11 +131,23 @@ export interface UserAuthOperations {
  */
 export interface Card {
   id: number;
+  image?: (number | null) | Media;
   name: string;
   class: 'Neutral' | 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades';
   type: 'Piece' | 'Tactic';
   pieceType?: ('Basic' | 'Queen' | 'King') | null;
+  customLimit?: boolean | null;
+  limit?: ('1' | '2' | '3') | null;
   set: number | Set;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -221,24 +233,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -315,22 +309,16 @@ export interface PayloadMigration {
  * via the `definition` "cards_select".
  */
 export interface CardsSelect<T extends boolean = true> {
+  image?: T;
   name?: T;
   class?: T;
   type?: T;
   pieceType?: T;
+  customLimit?: T;
+  limit?: T;
   set?: T;
   updatedAt?: T;
   createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

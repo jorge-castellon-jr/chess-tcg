@@ -5,13 +5,12 @@ export const Cards: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
   },
-  upload: {
-    adapter: 's3',
-    mimeTypes: ['image/*'],
-    displayPreview: true,
-    disableLocalStorage: true,
-  },
   fields: [
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+    },
     {
       name: 'name',
       type: 'text',
@@ -38,6 +37,18 @@ export const Cards: CollectionConfig = {
       defaultValue: 'Basic',
       admin: {
         condition: (data) => data.type === 'Piece',
+      },
+    },
+    {
+      name: 'customLimit',
+      type: 'checkbox',
+    },
+    {
+      name: 'limit',
+      type: 'radio',
+      options: ['1', '2', '3'],
+      admin: {
+        condition: (data) => data.customLimit,
       },
     },
     {
