@@ -58,13 +58,52 @@ const Card: React.FC<CardProps> = ({
           <img src={imageUrl} alt={imageAlt} className={styles.cardImage} />
         ) : (
           <div className={styles.cardImagePlaceholder}>
+            {/* Top Right Corner - Cost/Material Fraction */}
+            <div className={styles.cardCostMaterial}>
+              {(card.Cost !== null && card.Cost !== undefined) || (card.Material !== null && card.Material !== undefined) ? (
+                <div className={styles.fraction}>
+                  <div className={styles.fractionTop}>
+                    <span className={styles.fractionLabel}>C</span>
+                    <span>{card.Cost ?? '?'}</span>
+                  </div>
+                  <div className={styles.fractionLine}></div>
+                  <div className={styles.fractionBottom}>
+                    <span className={styles.fractionLabel}>M</span>
+                    <span>{card.Material ?? '?'}</span>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            
             <div className={styles.cardPlaceholderContent}>
-              <h3 className={styles.cardPlaceholderName}>{card.name}</h3>
-              <div className={styles.cardPlaceholderDetails}>
-                <div>{card.class}</div>
-                <div>{card.type}</div>
-                {card.pieceType && <div>{card.pieceType}</div>}
+              {/* Top Half - Card Name */}
+              <div className={styles.cardTopHalf}>
+                <h3 className={styles.cardPlaceholderName}>{card.name}</h3>
+                
+                {/* Class Slim Section */}
+                <div className={styles.cardClassSection}>
+                  <div className={styles.cardClass}>{card.class}</div>
+                </div>
               </div>
+              
+              {/* Bottom Half - Card Effect */}
+              <div className={styles.cardBottomHalf}>
+                <div className={styles.cardEffect}>
+                  {card.effect || 'No effect text'}
+                </div>
+              </div>
+              
+              {/* Footer - Attack and Defense (only show if stats exist) */}
+              {((card.ATK !== null && card.ATK !== undefined) || (card.DEF !== null && card.DEF !== undefined)) && (
+                <div className={styles.cardFooter}>
+                  <div className={styles.cardAttack}>
+                    {card.ATK !== null && card.ATK !== undefined ? `ATK: ${card.ATK}` : ''}
+                  </div>
+                  <div className={styles.cardDefense}>
+                    {card.DEF !== null && card.DEF !== undefined ? `DEF: ${card.DEF}` : ''}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

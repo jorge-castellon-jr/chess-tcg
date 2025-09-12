@@ -43,45 +43,152 @@
 }
 
 .cardImagePlaceholder {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
   font-size: 48px;
-  opacity: 0.5;
-  padding: 16px;
+  opacity: 0.9;
+  padding: 12px;
   box-sizing: border-box;
+  background: linear-gradient(135deg, 
+    light-dark(#f8f9fa, #2d3748) 0%, 
+    light-dark(#e9ecef, #1a202c) 100%);
+  border: 1px solid var(--border-color);
+}
+
+.cardCostMaterial {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+}
+
+.fraction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--text-primary);
+  background: light-dark(rgba(255, 255, 255, 0.9), rgba(45, 55, 72, 0.9));
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 6px 8px;
+  min-width: 40px;
+}
+
+.fractionTop,
+.fractionBottom {
+  line-height: 1;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.fractionLabel {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.fractionLine {
+  width: 100%;
+  height: 1px;
+  background-color: var(--text-primary);
+  margin: 1px 0;
 }
 
 .cardPlaceholderContent {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.cardTopHalf {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
 }
 
 .cardPlaceholderName {
-  margin: 0 0 12px 0;
-  font-size: 50px;
+  margin: 0;
+  font-size: 24px;
   font-weight: 700;
   color: var(--text-primary);
   opacity: 1;
   line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cardPlaceholderDetails {
-  font-size: 14px;
+.cardClassSection {
+  margin: 0;
+  padding: 4px 0;
+  border-top: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+  border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+  flex-shrink: 0;
+}
+
+.cardClass {
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-secondary);
-  opacity: 1;
-  line-height: 1.4;
-  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.cardPlaceholderDetails > div {
-  margin-bottom: 4px;
+.cardBottomHalf {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  min-height: 0;
 }
 
-.cardPlaceholderDetails > div:last-child {
-  margin-bottom: 0;
+.cardEffect {
+  font-size: 16px;
+  color: var(--text-primary);
+  line-height: 1.3;
+  text-align: center;
+  font-style: italic;
+  overflow-y: auto;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  border-top: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+  background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
+  margin: 0 -12px -12px -12px;
+}
+
+.cardAttack {
+  font-size: 14px;
+  font-weight: 600;
+  color: #dc3545;
+  text-align: left;
+}
+
+.cardDefense {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0066cc;
+  text-align: right;
 }
 
 .cardContent {
@@ -138,16 +245,39 @@
 
 .card.compact .cardImagePlaceholder {
   font-size: 32px;
-  padding: 12px;
+  padding: 8px;
 }
 
 .card.compact .cardPlaceholderName {
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-bottom: 6px;
 }
 
-.card.compact .cardPlaceholderDetails {
+.card.compact .cardClass {
   font-size: 12px;
+}
+
+.card.compact .cardEffect {
+  font-size: 12px;
+}
+
+.card.compact .cardAttack,
+.card.compact .cardDefense {
+  font-size: 11px;
+}
+
+.card.compact .fraction {
+  font-size: 12px;
+  padding: 4px 6px;
+}
+
+.card.compact .fractionTop,
+.card.compact .fractionBottom {
+  font-size: 11px;
+}
+
+.card.compact .fractionLabel {
+  font-size: 8px;
 }
 
 /* Mini variant - very small for deck cards list */
@@ -184,16 +314,39 @@
 
 .card.mini .cardImagePlaceholder {
   font-size: 16px;
-  padding: 4px;
+  padding: 2px;
 }
 
 .card.mini .cardPlaceholderName {
   font-size: 11px;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
-.card.mini .cardPlaceholderDetails {
+.card.mini .cardClass {
   font-size: 9px;
+}
+
+.card.mini .cardEffect {
+  font-size: 9px;
+}
+
+.card.mini .cardAttack,
+.card.mini .cardDefense {
+  font-size: 8px;
+}
+
+.card.mini .fraction {
+  font-size: 10px;
+  padding: 2px 4px;
+}
+
+.card.mini .fractionTop,
+.card.mini .fractionBottom {
+  font-size: 8px;
+}
+
+.card.mini .fractionLabel {
+  font-size: 6px;
 }
 
 .card.mini .cardHeader {
