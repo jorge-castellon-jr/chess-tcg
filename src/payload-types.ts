@@ -143,6 +143,10 @@ export interface Card {
   customLimit?: boolean | null;
   limit?: ('1' | '2' | '3') | null;
   set: number | Set;
+  Cost?: number | null;
+  ATK?: number | null;
+  DEF?: number | null;
+  Material?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -338,6 +342,10 @@ export interface CardsSelect<T extends boolean = true> {
   customLimit?: T;
   limit?: T;
   set?: T;
+  Cost?: T;
+  ATK?: T;
+  DEF?: T;
+  Material?: T;
   updatedAt?: T;
   createdAt?: T;
 }

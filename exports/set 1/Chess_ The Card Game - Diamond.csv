@@ -1,0 +1,6 @@
+,Name,Type,Effect,Cost,ATK,DEF,Material
+,Diamond Pawn,Piece,(First Move) Trade: Draw 1,0,1,2,1
+,Diamond Knight,Piece,Trap: Gain 2 Material.,3,5,2,3
+,Diamond Rook,Piece,Deploy: Search your Captured or burn pile. For a Pawn and place on your side of the board,5,4,4,4
+,Diamond Bishop,Piece,Trap: You may burn this card to search your capture zone for a diamond piece and place it in your hand,5,5,3,4
+,Queen of Diamonds,Piece,Trade: Get 2 pieces from your captured zone and place them in your hand,9,6,5,5

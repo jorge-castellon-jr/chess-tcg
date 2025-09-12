@@ -1,0 +1,5 @@
+,Name,Type,Effect,Cost,ATK,DEF,Material
+,King of Spades,,Action: Pay 2 Material for your next piece played this turn enter ready,,3,20,
+,King of Diamond,,"Action: Draw 1, Discard 1. If you control no other pieces, draw 2 instead.",,3,20,
+,King of Hearts,,"Action: Pay 2 Material Deal 2 damage to a piece. If it is captured this turn, draw 1 card.",,3,20,
+,King of Clubs,,"Action: Give a piece +1/+1. If it has no other buffs, gain 1 material.",,3,20,

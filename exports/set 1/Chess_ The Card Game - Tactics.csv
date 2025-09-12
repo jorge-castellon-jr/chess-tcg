@@ -1,0 +1,22 @@
+,Name,Type,Effect,Cost,ATK,DEF,Material
+,Fortify,Tactic,Equip: This piece has +3 Health,1,,,1
+,Skew,Tactic,Action: Deal 2 Damage to a piece. If that piece is captured deal 2 damage the enemy king,2,,,2
+,Fork ,Tactic,Equip: This piece has +3 Attack,2,,,2
+,Bong Cloud,Tactic,Action: Choose a tactic card on the board and destroy it. Draw 1 card,2,,,2
+,The London ,Tactic,Static: All your pieces have +1 Attack when in play,2,,,3
+,Sicilian Defense ,Tactic,Static: All your pieces have +1 Health when played,2,,,3
+,Kings Gambit,Tactic,Action: Deal 3 Damage to your and your oppenents King,2,,,2
+,Promotion,Tactic,Action: Choose a pawn you control. Destroy it to play a piece from your hand ready on the board.,2,,,3
+,Double Attack,Tactic,Equip: This piece can use an extra action this turn ,1,,,2
+,Blunder,Tactic,Action: Choose an enemy piece and give it -1 Attack/ -1 Defense. Move that piece to any open space on the board. ,3,,,3
+,Counter!,Tactic,(Limit One Per Deck) Action: Play this when an opponent plays a tactic card. Stop The effects of an opponents tactic,3,,,3
+,Lockdown,Tactic,"Action: Choose a pawn you control, capture it. Draw 1 card or gain 3 material",1,,,2
+,Reinforcements,Piece,Action: Search your captured zone for a piece and place it on the board ,2,,,2
+,Pin,Piece,Action: Deal 3 Damage to a Piece,3,,,2
+,Pawn's Gambit,Tactic,Static: When a pawn is captured give a pawn in play +1 Attack/ + 1 Health ,2,,,2
+,Advance!,Tactic,Action: Draw 2 Cards.,3,,,2
+,Castle,Tactic,Action: Restore 5 Health to your King.,2,,,2
+,Opening!,Tactic,Action: You may burn a card from your hand. Choose a card from the burn zone thats cost is equal to that cards trade value and place it in your hand,2,,,2
+,Thinking,Tactic,Action: Search your burned zone for a tactic card and play it.,2,,,3
+,Value!,Tactic,Trade: Draw 1 Card,0,,,1
+,Advantage!,Tactic,"Action: If you have more material than your opponent, draw 2 cards or deal 3 damage to a piece",2,,,3

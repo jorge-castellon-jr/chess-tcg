@@ -1,10 +1,86 @@
+import { getSetFolders, importCardsFromSet } from '@/utils/endpoints'
+import path from 'path'
 import { CollectionConfig } from 'payload'
+import { fileURLToPath } from 'url'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export const Cards: CollectionConfig = {
   slug: 'cards',
   admin: {
     useAsTitle: 'name',
+    components: {
+      beforeListTable:
+        process.env.NODE_ENV !== 'production'
+          ? ['src/components/ImportButton.tsx']
+          : undefined,
+    },
   },
+  endpoints: [
+    {
+      path: '/get-sets',
+      method: 'get',
+      handler: async () => {
+        console.log('get-sets')
+        const exportsPath = path.resolve(dirname, '../exports')
+        const result = await getSetFolders(exportsPath)
+        console.log('result', result)
+        console.log('exportsPath', exportsPath)
+
+        if (result.success) {
+          return Response.json({ sets: result.folders })
+        } else {
+          console.error('Error fetching sets:', result.details)
+          return Response.json({ error: result.error }, { status: 500 })
+        }
+      },
+    },
+    {
+      path: '/import-cards',
+      method: 'post',
+      handler: async (req) => {
+        if (process.env.NODE_ENV !== 'development') {
+          return Response.json({ error: 'Not found' }, { status: 404 })
+        }
+
+        const data = req.data
+        if (!data) {
+          return Response.json(
+            { error: 'setName is required' },
+            { status: 400 }
+          )
+        }
+        const { setName } = data
+
+        const exportsPath = path.resolve(dirname, '../exports')
+        const logsPath = path.resolve(dirname, '../logs')
+
+        const result = await importCardsFromSet(
+          req.payload,
+          setName,
+          exportsPath,
+          logsPath
+        )
+
+        if (result.success) {
+          return Response.json({
+            message: result.message,
+            stats: result.stats,
+          })
+        } else {
+          console.error('Error importing set:', result.details)
+          return Response.json(
+            {
+              error: result.error,
+              details: result.details,
+            },
+            { status: 500 }
+          )
+        }
+      },
+    },
+  ],
   fields: [
     {
       name: 'image',
@@ -66,6 +142,22 @@ export const Cards: CollectionConfig = {
       type: 'relationship',
       relationTo: 'sets',
       required: true,
+    },
+    {
+      name: 'Cost',
+      type: 'number',
+    },
+    {
+      name: 'ATK',
+      type: 'number',
+    },
+    {
+      name: 'DEF',
+      type: 'number',
+    },
+    {
+      name: 'Material',
+      type: 'number',
     },
     // {
     //   name: 'materialValue',

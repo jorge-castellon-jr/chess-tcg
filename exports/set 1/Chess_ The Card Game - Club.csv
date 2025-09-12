@@ -1,0 +1,6 @@
+\,Name,Type,Effect,Cost,ATK,DEF,Material
+,Club Pawn,Piece,(First Move) Take: Deal 2 Damage to the enemy King,2,2,3,2
+,Club Knight,Piece,Trap: Search your captured zone for a pawn and place it in your base,3,5,3,3
+,Club Rook ,Piece,Deploy:  Give a piece that cost less +1 Attack/+1 Health,4,3,3,4
+,Club Bishop,Piece,Trap: Give another Piece +1 Attack/+1 Health,5,5,3,4
+,Queen of Clubs,Piece,Take: This piece may attack again,10,6,4,5

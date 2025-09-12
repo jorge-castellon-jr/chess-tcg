@@ -1,0 +1,6 @@
+,Name,Type,Effect,Cost,ATK,DEF,Material
+,Spade Pawn,Piece,(First Move) Piercing,2,2,3,2
+,Spade Knight,Piece,Take: Search Your Burned Zone for a tactic card and place it into your hand,3,5,2,3
+,Spade Rook ,Piece,Piercing,5,3,3,4
+,Spade Bishop,Piece,"Piercing, Take: Search for a pawn in your captured zone and place it in your base",5,5,4,4
+,Queen of Spades,Piece,"Piercing,Deploy: Search your captured zone for a spade piece and place it on the board ready.",9,5,4,5

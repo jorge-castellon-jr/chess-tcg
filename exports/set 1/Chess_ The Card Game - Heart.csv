@@ -1,0 +1,6 @@
+,Name,Type,Effect,Cost,ATK,DEF,Material
+,Heart Pawn,Piece,(First Move)Trap: Choose a Piece and deal 1 damage to it,2,1,4,2
+,Heart Knight ,Piece,Deploy: Heal your king 2 health,3,4,4,3
+,Heart Rook ,Piece,Trap: Search Your Burned Zone for a card that cost 2 or less material and place it into your hand,5,2,6,4
+,Heart Bishop,Piece,Take: Restore 2 Health to your king,5,2,6,4
+,Queen of Hearts,Piece,"Trap: Search Your Burned Zone for 2 Tactic Cards and place them in your hand, or gain 4 material",10,3,8,5

@@ -1,0 +1,5 @@
+\,Name,Type,Effect,Cost,ATK,DEF,Material
+,Pawn,Piece,(First Move),2,3,3,1
+,Knight,Piece,,2,4,3,2
+,Rook ,Piece,,5,4,4,2
+,Bishop,Piece,,5,5,2,3
