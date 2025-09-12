@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { importCardsFromSet } from '@/utils/endpoints'
-
-// Get the current directory for path resolution
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
 
 /**
  * POST /api/import-cards
@@ -87,7 +82,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Optional: Add OPTIONS handler for CORS if needed
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS(_request: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

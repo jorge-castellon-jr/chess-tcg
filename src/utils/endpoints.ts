@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import csv from 'csv-parser'
 import { Payload } from 'payload'
-import { Keyword } from '@/payload-types'
 
 /**
  * CSV row structure from parsed CSV files
@@ -71,13 +70,13 @@ function determineCardClass(
 /**
  * Determine piece type based on card name
  */
-function determinePieceType(name: string): 'Basic' | 'Queen' | 'King' | null {
+function determinePieceType(name: string): 'Basic' | 'Queen' | 'King' | undefined {
   const lowerName = name.toLowerCase()
-
+  
   if (lowerName.includes('queen')) return 'Queen'
   if (lowerName.includes('king')) return 'King'
-
-  // Default to Basic for piece cards, null will be handled by caller
+  
+  // Default to Basic for piece cards
   return 'Basic'
 }
 
@@ -190,13 +189,13 @@ async function processCardRow(
     }
 
     if (row.Cost !== undefined && row.Cost !== '')
-      cardData.Cost = parseInt(row.Cost) || null
+      cardData.Cost = parseInt(String(row.Cost)) || null
     if (row.ATK !== undefined && row.ATK !== '')
-      cardData.ATK = parseInt(row.ATK) || null
+      cardData.ATK = parseInt(String(row.ATK)) || null
     if (row.DEF !== undefined && row.DEF !== '')
-      cardData.DEF = parseInt(row.DEF) || null
+      cardData.DEF = parseInt(String(row.DEF)) || null
     if (row.Material !== undefined && row.Material !== '')
-      cardData.Material = parseInt(row.Material) || null
+      cardData.Material = parseInt(String(row.Material)) || null
     if (row.CustomLimit)
       cardData.customLimit =
         row.CustomLimit === 'true' || row.CustomLimit === '1'
@@ -205,13 +204,13 @@ async function processCardRow(
     // Find and add matching keywords based on effect text
     const matchingKeywords = await findMatchingKeywords(
       payload,
-      cardData.effect
+      cardData.effect || null
     )
     if (matchingKeywords.length > 0) {
       cardData.keywords = matchingKeywords
     }
     if (row.Material !== undefined && row.Material !== '')
-      cardData.Material = parseInt(row.Material) || null
+      cardData.Material = parseInt(String(row.Material)) || null
     if (row.CustomLimit)
       cardData.customLimit =
         row.CustomLimit === 'true' || row.CustomLimit === '1'
