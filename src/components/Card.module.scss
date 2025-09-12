@@ -50,6 +50,38 @@
   height: 100%;
   font-size: 48px;
   opacity: 0.5;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.cardPlaceholderContent {
+  text-align: center;
+  width: 100%;
+}
+
+.cardPlaceholderName {
+  margin: 0 0 12px 0;
+  font-size: 50px;
+  font-weight: 700;
+  color: var(--text-primary);
+  opacity: 1;
+  line-height: 1.2;
+}
+
+.cardPlaceholderDetails {
+  font-size: 14px;
+  color: var(--text-secondary);
+  opacity: 1;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.cardPlaceholderDetails > div {
+  margin-bottom: 4px;
+}
+
+.cardPlaceholderDetails > div:last-child {
+  margin-bottom: 0;
 }
 
 .cardContent {
@@ -106,6 +138,16 @@
 
 .card.compact .cardImagePlaceholder {
   font-size: 32px;
+  padding: 12px;
+}
+
+.card.compact .cardPlaceholderName {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.card.compact .cardPlaceholderDetails {
+  font-size: 12px;
 }
 
 /* Mini variant - very small for deck cards list */
@@ -142,6 +184,16 @@
 
 .card.mini .cardImagePlaceholder {
   font-size: 16px;
+  padding: 4px;
+}
+
+.card.mini .cardPlaceholderName {
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.card.mini .cardPlaceholderDetails {
+  font-size: 9px;
 }
 
 .card.mini .cardHeader {
@@ -158,15 +210,15 @@
   .cardName {
     font-size: 12px;
   }
-  
+
   .cardDate {
     font-size: 9px;
   }
-  
+
   .card.compact .cardName {
     font-size: 11px;
   }
-  
+
   .card.compact .cardDate {
     font-size: 8px;
   }

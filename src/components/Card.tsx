@@ -58,7 +58,14 @@ const Card: React.FC<CardProps> = ({
           <img src={imageUrl} alt={imageAlt} className={styles.cardImage} />
         ) : (
           <div className={styles.cardImagePlaceholder}>
-            <span>🎴</span>
+            <div className={styles.cardPlaceholderContent}>
+              <h3 className={styles.cardPlaceholderName}>{card.name}</h3>
+              <div className={styles.cardPlaceholderDetails}>
+                <div>{card.class}</div>
+                <div>{card.type}</div>
+                {card.pieceType && <div>{card.pieceType}</div>}
+              </div>
+            </div>
           </div>
         )}
       </div>
