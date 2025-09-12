@@ -17,6 +17,16 @@ export const Cards: CollectionConfig = {
       required: true,
     },
     {
+      name: 'effect',
+      type: 'text',
+    },
+    {
+      name: 'keywords',
+      type: 'relationship',
+      relationTo: 'keywords',
+      hasMany: true,
+    },
+    {
       name: 'class',
       type: 'select',
       options: ['Neutral', 'Hearts', 'Diamonds', 'Clubs', 'Spades'],

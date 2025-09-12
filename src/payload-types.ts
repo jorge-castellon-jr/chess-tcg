@@ -73,6 +73,7 @@ export interface Config {
     decks: Deck;
     users: User;
     media: Media;
+    keywords: Keyword;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -85,6 +86,7 @@ export interface Config {
     decks: DecksSelect<false> | DecksSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    keywords: KeywordsSelect<false> | KeywordsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -133,6 +135,8 @@ export interface Card {
   id: number;
   image?: (number | null) | Media;
   name: string;
+  effect?: string | null;
+  keywords?: (number | Keyword)[] | null;
   class: 'Neutral' | 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades';
   type: 'Piece' | 'Tactic';
   pieceType?: ('Basic' | 'Queen' | 'King') | null;
@@ -159,6 +163,17 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords".
+ */
+export interface Keyword {
+  id: number;
+  name: string;
+  rules?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -261,6 +276,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'keywords';
+        value: number | Keyword;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -311,6 +330,8 @@ export interface PayloadMigration {
 export interface CardsSelect<T extends boolean = true> {
   image?: T;
   name?: T;
+  effect?: T;
+  keywords?: T;
   class?: T;
   type?: T;
   pieceType?: T;
@@ -403,6 +424,16 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords_select".
+ */
+export interface KeywordsSelect<T extends boolean = true> {
+  name?: T;
+  rules?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

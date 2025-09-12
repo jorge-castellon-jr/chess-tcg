@@ -15,6 +15,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { Keywords } from './collections/Keywords'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,7 +32,7 @@ export default buildConfig({
       collections: ['cards'],
     },
   },
-  collections: [Cards, Sets, Tournaments, Decks, Users, Media],
+  collections: [Cards, Sets, Tournaments, Decks, Users, Media, Keywords],
   globals: [Rules],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
