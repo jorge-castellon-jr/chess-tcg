@@ -5,26 +5,47 @@ export const Decks: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
   },
+  access: {
+    create: () => true,
+    read: () => true,
+  },
   fields: [
     {
       name: 'name',
       type: 'text',
+      required: true,
     },
     {
       name: 'user',
       type: 'relationship',
       relationTo: 'users',
+      required: false, // Allow decks without users since you mentioned no users for now
     },
     {
-      name: 'cards',
-      type: 'relationship',
-      relationTo: 'cards',
-      hasMany: true,
+      name: 'deckCards',
+      type: 'array',
+      label: 'Deck Cards',
+      fields: [
+        {
+          name: 'card',
+          type: 'relationship',
+          relationTo: 'cards',
+          required: true,
+        },
+        {
+          name: 'quantity',
+          type: 'number',
+          required: true,
+          min: 1,
+          max: 3,
+          defaultValue: 1,
+        },
+      ],
     },
     {
       name: 'isPublic',
       type: 'checkbox',
-      defaultValue: false,
+      defaultValue: true,
     },
   ],
 }

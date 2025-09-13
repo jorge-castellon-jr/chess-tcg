@@ -216,9 +216,15 @@ export interface Tournament {
  */
 export interface Deck {
   id: number;
-  name?: string | null;
+  name: string;
   user?: (string | null) | User;
-  cards?: (number | Card)[] | null;
+  deckCards?:
+    | {
+        card: number | Card;
+        quantity: number;
+        id?: string | null;
+      }[]
+    | null;
   isPublic?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -385,7 +391,13 @@ export interface TournamentsSelect<T extends boolean = true> {
 export interface DecksSelect<T extends boolean = true> {
   name?: T;
   user?: T;
-  cards?: T;
+  deckCards?:
+    | T
+    | {
+        card?: T;
+        quantity?: T;
+        id?: T;
+      };
   isPublic?: T;
   updatedAt?: T;
   createdAt?: T;

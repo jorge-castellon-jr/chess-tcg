@@ -142,6 +142,178 @@
   flex-wrap: wrap;
 }
 
+.primaryButton {
+  display: inline-block;
+  background: var(--link-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.primaryButton:hover {
+  background: var(--link-color);
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.gridItem {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.gridItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--link-color);
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.itemTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.itemMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.cardCount {
+  color: var(--link-color);
+  font-weight: 600;
+}
+
+.uniqueCount {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.itemContent {
+  margin-bottom: 16px;
+}
+
+.itemDescription {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.itemFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.createdDate {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.viewButton {
+  color: var(--link-color);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.deckStats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--link-color);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deckClass {
+  background: var(--link-color);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deckStatsGrid {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.statGroup {
+  text-align: center;
+  flex: 1;
+}
+
+.statGroup .statValue {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--link-color);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.statGroup .statLabel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
 @media (max-width: 768px) {
   .pageNav,
   .pageNavWide {
@@ -163,5 +335,48 @@
   .actionButtons {
     flex-direction: column;
     align-items: center;
+  }
+
+  .gridContainer {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .itemHeader {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .itemMeta {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .deckStats {
+    gap: 32px;
+  }
+
+  .statValue {
+    font-size: 28px;
+  }
+
+  .deckStatsGrid {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .statGroup .statValue {
+    font-size: 18px;
+  }
+
+  .statGroup .statLabel {
+    font-size: 10px;
+  }
+
+  .deckClass {
+    font-size: 11px;
+    padding: 3px 10px;
   }
 }

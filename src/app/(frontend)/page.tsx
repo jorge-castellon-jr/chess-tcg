@@ -14,17 +14,18 @@ export default async function HomePage() {
   await payload.auth({ headers })
 
   // Fetch some sample data to show on homepage
-  let recentSets = null
+  let recentDecks = null
   let upcomingTournaments = null
 
   try {
-    recentSets = await payload.find({
-      collection: 'sets',
+    recentDecks = await payload.find({
+      collection: 'decks',
       limit: 3,
-      sort: '-releaseDate',
+      sort: '-createdAt',
+      depth: 1,
     })
   } catch (error) {
-    console.error('Error fetching sets:', error)
+    console.error('Error fetching decks:', error)
   }
 
   try {
@@ -72,10 +73,10 @@ export default async function HomePage() {
                 Explore all available cards with detailed stats and abilities
               </p>
             </Link>
-            <Link href="/sets" className="nav-card">
-              <div className="nav-icon">📦</div>
-              <h3>Card Sets</h3>
-              <p>Browse releases and discover new expansions</p>
+            <Link href="/decks" className="nav-card">
+              <div className="nav-icon">🃏</div>
+              <h3>Saved Decks</h3>
+              <p>Browse and share community deck builds</p>
             </Link>
             <Link href="/tournaments" className="nav-card">
               <div className="nav-icon">🏆</div>
@@ -123,26 +124,32 @@ export default async function HomePage() {
       </nav>
 
       <main className="main-content">
-        {recentSets && recentSets.docs && recentSets.docs.length > 0 && (
+        {recentDecks && recentDecks.docs && recentDecks.docs.length > 0 && (
           <section className="content-section">
             <div className="section-header">
-              <h2>Latest Card Sets</h2>
-              <Link href="/sets" className="view-all-link">
+              <h2>Latest Saved Decks</h2>
+              <Link href="/decks" className="view-all-link">
                 View All →
               </Link>
             </div>
             <div className="sets-preview">
-              {recentSets.docs.map((set: any) => (
-                <div key={set.id} className="set-preview-card">
-                  <div className="set-date">
-                    {new Date(set.releaseDate || '').toLocaleDateString()}
-                  </div>
-                  <h3 className="set-name">{set.name || 'Unnamed Set'}</h3>
-                  <p className="set-description">
-                    Explore the latest cards and mechanics
-                  </p>
-                </div>
-              ))}
+              {recentDecks.docs.map((deck: any) => {
+                const totalCards = deck.deckCards?.reduce((total: number, deckCard: any) => {
+                  return total + (deckCard.quantity || 0)
+                }, 0) || 0
+                
+                return (
+                  <Link key={deck.id} href={`/decks/${deck.id}`} className="set-preview-card">
+                    <div className="set-date">
+                      {new Date(deck.createdAt || '').toLocaleDateString()}
+                    </div>
+                    <h3 className="set-name">{deck.name || 'Unnamed Deck'}</h3>
+                    <p className="set-description">
+                      {totalCards} cards • Click to view deck
+                    </p>
+                  </Link>
+                )
+              })}
             </div>
           </section>
         )}
@@ -228,7 +235,7 @@ export default async function HomePage() {
             <h4>Game</h4>
             <Link href="/rules">Rules</Link>
             <Link href="/cards">Cards</Link>
-            <Link href="/sets">Sets</Link>
+            <Link href="/decks">Decks</Link>
           </div>
           <div className="footer-section">
             <h4>Community</h4>

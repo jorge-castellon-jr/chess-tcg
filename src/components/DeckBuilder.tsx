@@ -14,7 +14,6 @@ interface Deck {
   id?: string
   name: string
   cards: DeckCard[]
-  isPublic: boolean
 }
 
 interface DeckBuilderProps {
@@ -25,7 +24,6 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
   const [deck, setDeck] = useState<Deck>({
     name: '',
     cards: [],
-    isPublic: false,
   })
   const [selectedKing, setSelectedKing] = useState<CardType | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -161,9 +159,6 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
     setDeck((prev) => ({ ...prev, name }))
   }
 
-  const togglePublic = () => {
-    setDeck((prev) => ({ ...prev, isPublic: !prev.isPublic }))
-  }
 
   const validateDeck = (): string[] => {
     const errors: string[] = []
@@ -191,11 +186,39 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
     }
 
     try {
-      // TODO: Implement save functionality with Payload API
-      console.log('Saving deck:', deck)
+      // Prepare deck data for the new format
+      const deckData = {
+        name: deck.name.trim(),
+        deckCards: deck.cards.map((deckCard) => ({
+          card: deckCard.card.id,
+          quantity: deckCard.quantity,
+        })),
+        isPublic: true, // Always public for now
+        // Don't include user since there are no users yet
+      }
+
+      const response = await fetch('/api/decks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(deckData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const savedDeck = await response.json()
+      console.log('Deck saved successfully:', savedDeck)
       alert(
-        'Deck saved successfully! (This will be implemented with Payload API)'
+        `Deck "${deck.name}" saved successfully! You can now find it in the deck collection.`
       )
+      
+      // Optionally reset the deck after saving
+      // setDeck({ name: '', cards: [] })
+      // setSelectedKing(null)
+      // setErrors([])
     } catch (error) {
       console.error('Error saving deck:', error)
       alert('Error saving deck. Please try again.')
@@ -386,14 +409,6 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
               className="deck-name-input"
             />
 
-            <label className="public-checkbox">
-              <input
-                type="checkbox"
-                checked={deck.isPublic}
-                onChange={togglePublic}
-              />
-              <span>Make deck public</span>
-            </label>
           </div>
 
           <div className="deck-cards">
@@ -465,7 +480,7 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
 
             <button
               onClick={() => {
-                setDeck({ name: '', cards: [], isPublic: false })
+                setDeck({ name: '', cards: [] })
                 setSelectedKing(null)
                 setErrors([])
               }}
@@ -748,14 +763,6 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
           color: var(--text-primary);
         }
 
-        .public-checkbox {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 14px;
-          color: var(--text-primary);
-          cursor: pointer;
-        }
 
         .deck-cards {
           flex: 1;
