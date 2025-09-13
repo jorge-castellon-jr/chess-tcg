@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card as CardType } from '@/payload-types'
 import Card from './Card'
 import CardFilters from './CardFilters'
@@ -22,6 +23,7 @@ interface DeckBuilderProps {
 }
 
 const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneData }) => {
+  const router = useRouter()
   const [deck, setDeck] = useState<Deck>({
     name: '',
     cards: []
@@ -79,31 +81,47 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
     // Check if it's a king
     if (card.pieceType === 'King') {
       if (selectedKing && selectedKing.id !== card.id) {
-        newErrors.push('Only one king is allowed per deck')
-        setErrors(newErrors)
-        setTimeout(() => setErrors([]), 3000)
-        return
-      } else {
-        // Set the king and automatically add it to deck
-        setSelectedKing(card)
-
-        // Auto-add king to deck if not already there
+        // Allow king replacement - remove the old king and incompatible class cards
+        const confirmReplacement = window.confirm(
+          `Replace the current king (${selectedKing.name}) with ${card.name}? This will remove any cards that don't match the new king's class.`
+        )
+        if (!confirmReplacement) {
+          return
+        }
+        
+        // Remove the old king from deck
         setDeck((prev) => {
-          const hasKing = prev.cards.some(
-            (deckCard) => deckCard.card.pieceType === 'King'
+          const cardsWithoutOldKing = prev.cards.filter(
+            (deckCard) => deckCard.card.pieceType !== 'King'
           )
-          if (!hasKing) {
-            return {
-              ...prev,
-              cards: [...prev.cards, { card, quantity: 1 }],
-            }
-          }
-          return prev
+          return { ...prev, cards: cardsWithoutOldKing }
         })
-
-        setErrors([])
-        return // Don't continue with normal adding logic
       }
+      
+      // Set the new king
+      setSelectedKing(card)
+      
+      // Remove incompatible class cards
+      setTimeout(() => {
+        removeIncompatibleClassCards(card.class || 'Neutral')
+      }, 0)
+
+      // Auto-add king to deck if not already there
+      setDeck((prev) => {
+        const hasThisKing = prev.cards.some(
+          (deckCard) => deckCard.card.id === card.id
+        )
+        if (!hasThisKing) {
+          return {
+            ...prev,
+            cards: [...prev.cards, { card, quantity: 1 }],
+          }
+        }
+        return prev
+      })
+
+      setErrors([])
+      return // Don't continue with normal adding logic
     }
 
     // Check if it's a queen
@@ -172,11 +190,16 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
     // Special handling for king removal
     if (isKing) {
       const confirmRemoval = window.confirm(
-        'Removing the king will reset your entire deck. Are you sure?'
+        'Are you sure you want to remove the king? This will allow you to select a different one.'
       )
       if (confirmRemoval) {
         setSelectedKing(null)
-        setDeck((prev) => ({ ...prev, cards: [] }))
+        // Remove only the king card, keep other cards in the deck
+        setDeck((prev) => {
+          const updatedCards = [...prev.cards]
+          updatedCards.splice(cardIndex, 1)
+          return { ...prev, cards: updatedCards }
+        })
         setErrors([])
       }
       return
@@ -199,6 +222,25 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
 
   const updateDeckName = (name: string) => {
     setDeck((prev) => ({ ...prev, name }))
+  }
+
+  // Helper function to remove cards that are incompatible with the new king's class
+  const removeIncompatibleClassCards = (newKingClass: string) => {
+    setDeck((prev) => {
+      const compatibleCards = prev.cards.filter((deckCard) => {
+        // Keep the card if:
+        // 1. It's the new king
+        // 2. It's Neutral class
+        // 3. It matches the new king's class
+        const isNewKing = deckCard.card.pieceType === 'King'
+        const isNeutral = deckCard.card.class === 'Neutral'
+        const matchesKingClass = deckCard.card.class === newKingClass
+        
+        return isNewKing || isNeutral || matchesKingClass
+      })
+      
+      return { ...prev, cards: compatibleCards }
+    })
   }
 
 
@@ -253,14 +295,9 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
 
       const savedDeck = await response.json()
       console.log('Deck saved successfully:', savedDeck)
-      alert(
-        `Deck "${deck.name}" saved successfully! You can now find it in the deck collection.`
-      )
       
-      // Optionally reset the deck after saving
-      // setDeck({ name: '', cards: [] })
-      // setSelectedKing(null)
-      // setErrors([])
+      // Redirect to the deck view page
+      router.push(`/decks/${savedDeck.doc.id}`)
     } catch (error) {
       console.error('Error saving deck:', error)
       alert('Error saving deck. Please try again.')
