@@ -18,71 +18,101 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
     return cards.sort((a, b) => {
       const cardA = a.card
       const cardB = b.card
-      
+
       // Priority 1: King first
       if (cardA.pieceType === 'King' && cardB.pieceType !== 'King') return -1
       if (cardB.pieceType === 'King' && cardA.pieceType !== 'King') return 1
-      
+
       // Priority 2: Queen second
-      if (cardA.pieceType === 'Queen' && cardB.pieceType !== 'Queen' && cardB.pieceType !== 'King') return -1
-      if (cardB.pieceType === 'Queen' && cardA.pieceType !== 'Queen' && cardA.pieceType !== 'King') return 1
-      
+      if (
+        cardA.pieceType === 'Queen' &&
+        cardB.pieceType !== 'Queen' &&
+        cardB.pieceType !== 'King'
+      )
+        return -1
+      if (
+        cardB.pieceType === 'Queen' &&
+        cardA.pieceType !== 'Queen' &&
+        cardA.pieceType !== 'King'
+      )
+        return 1
+
       // Get the deck's king to determine the main class
-      const kingCard = cards.find(c => c.card.pieceType === 'King')?.card
+      const kingCard = cards.find((c) => c.card.pieceType === 'King')?.card
       const mainClass = kingCard?.class || 'Neutral'
-      
+
       // Priority 3: Same class pieces (excluding King/Queen)
-      const isAPieceSameClass = cardA.type === 'Piece' && cardA.class === mainClass && cardA.pieceType !== 'King' && cardA.pieceType !== 'Queen'
-      const isBPieceSameClass = cardB.type === 'Piece' && cardB.class === mainClass && cardB.pieceType !== 'King' && cardB.pieceType !== 'Queen'
-      
+      const isAPieceSameClass =
+        cardA.type === 'Piece' &&
+        cardA.class === mainClass &&
+        cardA.pieceType !== 'King' &&
+        cardA.pieceType !== 'Queen'
+      const isBPieceSameClass =
+        cardB.type === 'Piece' &&
+        cardB.class === mainClass &&
+        cardB.pieceType !== 'King' &&
+        cardB.pieceType !== 'Queen'
+
       if (isAPieceSameClass && !isBPieceSameClass) return -1
       if (isBPieceSameClass && !isAPieceSameClass) return 1
-      
+
       // Within same class pieces, sort by quantity then alphabetical
       if (isAPieceSameClass && isBPieceSameClass) {
         if (a.quantity !== b.quantity) return b.quantity - a.quantity // Higher count first
         return cardA.name.localeCompare(cardB.name) // Alphabetical
       }
-      
+
       // Priority 4: Neutral class pieces (excluding King/Queen)
-      const isAPieceNeutral = cardA.type === 'Piece' && cardA.class === 'Neutral' && cardA.pieceType !== 'King' && cardA.pieceType !== 'Queen'
-      const isBPieceNeutral = cardB.type === 'Piece' && cardB.class === 'Neutral' && cardB.pieceType !== 'King' && cardB.pieceType !== 'Queen'
-      
+      const isAPieceNeutral =
+        cardA.type === 'Piece' &&
+        cardA.class === 'Neutral' &&
+        cardA.pieceType !== 'King' &&
+        cardA.pieceType !== 'Queen'
+      const isBPieceNeutral =
+        cardB.type === 'Piece' &&
+        cardB.class === 'Neutral' &&
+        cardB.pieceType !== 'King' &&
+        cardB.pieceType !== 'Queen'
+
       if (isAPieceNeutral && !isBPieceNeutral && !isBPieceSameClass) return -1
       if (isBPieceNeutral && !isAPieceNeutral && !isAPieceSameClass) return 1
-      
+
       // Within neutral pieces, sort by quantity then alphabetical
       if (isAPieceNeutral && isBPieceNeutral) {
         if (a.quantity !== b.quantity) return b.quantity - a.quantity // Higher count first
         return cardA.name.localeCompare(cardB.name) // Alphabetical
       }
-      
+
       // Priority 5: Same class tactics
-      const isATacticSameClass = cardA.type === 'Tactic' && cardA.class === mainClass
-      const isBTacticSameClass = cardB.type === 'Tactic' && cardB.class === mainClass
-      
+      const isATacticSameClass =
+        cardA.type === 'Tactic' && cardA.class === mainClass
+      const isBTacticSameClass =
+        cardB.type === 'Tactic' && cardB.class === mainClass
+
       if (isATacticSameClass && !isBTacticSameClass) return -1
       if (isBTacticSameClass && !isATacticSameClass) return 1
-      
+
       // Within same class tactics, sort by quantity then alphabetical
       if (isATacticSameClass && isBTacticSameClass) {
         if (a.quantity !== b.quantity) return b.quantity - a.quantity // Higher count first
         return cardA.name.localeCompare(cardB.name) // Alphabetical
       }
-      
+
       // Priority 6: Neutral class tactics
-      const isATacticNeutral = cardA.type === 'Tactic' && cardA.class === 'Neutral'
-      const isBTacticNeutral = cardB.type === 'Tactic' && cardB.class === 'Neutral'
-      
+      const isATacticNeutral =
+        cardA.type === 'Tactic' && cardA.class === 'Neutral'
+      const isBTacticNeutral =
+        cardB.type === 'Tactic' && cardB.class === 'Neutral'
+
       if (isATacticNeutral && !isBTacticNeutral) return -1
       if (isBTacticNeutral && !isATacticNeutral) return 1
-      
+
       // Within neutral tactics, sort by quantity then alphabetical
       if (isATacticNeutral && isBTacticNeutral) {
         if (a.quantity !== b.quantity) return b.quantity - a.quantity // Higher count first
         return cardA.name.localeCompare(cardB.name) // Alphabetical
       }
-      
+
       // Fallback: alphabetical by name
       return cardA.name.localeCompare(cardB.name)
     })
@@ -97,9 +127,9 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
       if (typeof deckCard.card === 'object') {
         const card = deckCard.card as Card
         const quantity = deckCard.quantity || 1
-        
+
         uniqueCards.push({ card, quantity })
-        
+
         // Add card multiple times for all cards view
         for (let i = 0; i < quantity; i++) {
           allCards.push({ card, quantity: 1 })
@@ -113,11 +143,15 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
   const sortedAllCards = sortDeckCards(allCards)
 
   // Separate King and other cards for All Cards view
-  const kingCard = sortedAllCards.find(item => item.card.pieceType === 'King')
-  const nonKingCards = sortedAllCards.filter(item => item.card.pieceType !== 'King')
+  const kingCard = sortedAllCards.find((item) => item.card.pieceType === 'King')
+  const nonKingCards = sortedAllCards.filter(
+    (item) => item.card.pieceType !== 'King'
+  )
 
   // Calculate deck statistics
-  const deckClass = sortedUniqueCards.find(c => c.card.pieceType === 'King')?.card.class || 'Unknown'
+  const deckClass =
+    sortedUniqueCards.find((c) => c.card.pieceType === 'King')?.card.class ||
+    'Unknown'
   const pieceCount = sortedUniqueCards.reduce((count, item) => {
     return item.card.type === 'Piece' ? count + item.quantity : count
   }, 0)
@@ -153,7 +187,7 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
         if (blob) {
           try {
             await navigator.clipboard.write([
-              new ClipboardItem({ 'image/png': blob })
+              new ClipboardItem({ 'image/png': blob }),
             ])
             alert('Deck image copied to clipboard!')
           } catch (error) {
@@ -177,44 +211,50 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
     }
   }
 
-  const renderCard = (card: Card, quantity?: number, showQuantity: boolean = false) => {
-    const imageUrl = typeof card.image === 'object' && card.image?.url 
-      ? card.image.url 
-      : '/placeholder-card.png' // You'll need a placeholder image
+  const renderCard = (
+    card: Card,
+    quantity?: number,
+    showQuantity: boolean = false
+  ) => {
+    const imageUrl =
+      typeof card.image === 'object' && card.image?.url
+        ? card.image.url
+        : '/placeholder-card.png' // You'll need a placeholder image
 
     return (
-      <div 
-        key={`${card.id}-${Math.random()}`} 
+      <div
+        key={`${card.id}-${Math.random()}`}
         className="deck-card"
         style={{
           position: 'relative',
           borderRadius: '12px',
           overflow: 'hidden',
           aspectRatio: '2.5 / 3.5',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
         }}
       >
         {showQuantity && quantity && quantity > 1 && (
-          <div 
-            className="quantity-badge"
+          <div
+            className="quantity-text"
             style={{
               position: 'absolute',
-              top: '10px',
-              left: '10px',
-              background: 'linear-gradient(135deg, #ff4444, #cc0000)',
-              color: 'white',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '18px',
+              top: '16px',
+              left: '20px',
+              color: '#ffffff',
+              fontSize: '40px',
               fontWeight: '900',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
               zIndex: 100,
-              boxShadow: '0 6px 18px rgba(0, 0, 0, 0.5)',
-              border: '2px solid white',
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)'
+              textShadow: `
+                -2px -2px 0 #000,
+                2px -2px 0 #000,
+                -2px 2px 0 #000,
+                2px 2px 0 #000,
+                0 0 8px rgba(0, 0, 0, 0.8),
+                0 0 16px rgba(0, 0, 0, 0.6)
+              `,
+              lineHeight: '1',
+              pointerEvents: 'none',
             }}
           >
             {quantity}
@@ -230,7 +270,7 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
             height: '100%',
             objectFit: 'cover',
             display: 'block',
-            borderRadius: '12px'
+            borderRadius: '12px',
           }}
         />
       </div>
@@ -256,10 +296,7 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
         </div>
 
         <div className="action-buttons">
-          <button
-            onClick={copyShareLink}
-            className="share-button"
-          >
+          <button onClick={copyShareLink} className="share-button">
             📋 Copy Link
           </button>
           <button
@@ -275,7 +312,10 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
       <div className="deck-content" ref={deckRef}>
         <div className="deck-header-print">
           <h2>{deck.name}</h2>
-          <p>{deckClass} Deck • {sortedUniqueCards.length} Unique • {pieceCount} Pieces • {tacticCount} Tactics</p>
+          <p>
+            {deckClass} Deck • {sortedUniqueCards.length} Unique • {pieceCount}{' '}
+            Pieces • {tacticCount} Tactics
+          </p>
         </div>
 
         {activeTab === 'all' && kingCard && (
