@@ -144,11 +144,11 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
     try {
       const canvas = await html2canvas(deckRef.current, {
         backgroundColor: '#ffffff',
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
-      })
-
-      // Convert to blob and copy to clipboard
+        allowTaint: true,
+        logging: false, // Disable html2canvas logging for cleaner console
+      } as any)
       canvas.toBlob(async (blob) => {
         if (blob) {
           try {
@@ -287,10 +287,13 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
         )}
 
         <div className="cards-grid">
-          {activeTab === 'all' 
-            ? nonKingCards.map((item, index) => renderCard(item.card, item.quantity, false))
-            : sortedUniqueCards.map((item, index) => renderCard(item.card, item.quantity, true))
-          }
+          {activeTab === 'all'
+            ? nonKingCards.map((item, _index) =>
+                renderCard(item.card, item.quantity, false)
+              )
+            : sortedUniqueCards.map((item, _index) =>
+                renderCard(item.card, item.quantity, true)
+              )}
         </div>
       </div>
 

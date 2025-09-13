@@ -10,19 +10,20 @@ import ThemeToggle from '../../../../components/ThemeToggle'
 import styles from '../../../../styles/PageLayout.module.scss'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: PageProps) {
+  const resolvedParams = await params
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
   try {
     const deck = await payload.findByID({
       collection: 'decks',
-      id: parseInt(params.id),
+      id: parseInt(resolvedParams.id),
       depth: 2,
     })
 
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: `${deck.name} - Chess TCG Deck`,
       description: `View the complete ${deck.name} deck for Chess Trading Card Game.`,
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       title: 'Deck Not Found - Chess TCG',
       description: 'The requested deck could not be found.',
@@ -39,6 +40,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function DeckDetailPage({ params }: PageProps) {
+  const resolvedParams = await params
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
@@ -46,11 +48,11 @@ export default async function DeckDetailPage({ params }: PageProps) {
   try {
     deck = await payload.findByID({
       collection: 'decks',
-      id: parseInt(params.id),
+      id: parseInt(resolvedParams.id),
       depth: 2, // Include card relationships and their images
     })
-  } catch (error) {
-    console.error('Error fetching deck:', error)
+  } catch (_error) {
+    console.error('Error fetching deck:', _error)
     notFound()
   }
 
