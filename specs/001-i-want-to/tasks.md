@@ -38,7 +38,7 @@
 
 - [ ] T017: Integrate Discord OAuth for user authentication.
 - [ ] T018: Integrate LogRocket for frontend logging and session replay.
-- [ ] T019: Configure Turso as the database adapter.
+- [x] T019: Configure Turso as the database adapter.
 
 ## Phase 3.7: Testing
 
@@ -80,4 +80,3 @@ Task: "[P] Create SetList component in src/admin/components/SetList.tsx"
 Task: "[P] Create TournamentList component in src/admin/components/TournamentList.tsx"
 Task: "[P] Create DeckBuilder component in src/admin/components/DeckBuilder.tsx"
 ```
-
