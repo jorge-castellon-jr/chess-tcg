@@ -1,17 +1,19 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { Deck, Card } from '@/payload-types'
 import html2canvas from 'html2canvas'
+import { useRouter } from 'next/navigation'
+import { Deck, Card } from '@/payload-types'
 
 interface DeckViewerProps {
   deck: Deck
 }
 
 const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
-  const [activeTab, setActiveTab] = useState<'all' | 'unique'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'unique'>('unique')
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const deckRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   // Deck sorting function
   const sortDeckCards = (cards: { card: Card; quantity: number }[]) => {
@@ -187,7 +189,7 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
         if (blob) {
           try {
             await navigator.clipboard.write([
-              new ClipboardItem({ 'image/png': blob }),
+              new ClipboardItem({ 'image/png': blob })
             ])
             alert('Deck image copied to clipboard!')
           } catch (error) {
@@ -208,6 +210,29 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
       console.error('Error generating image:', error)
       alert('Failed to generate deck image')
       setIsGeneratingImage(false)
+    }
+  }
+
+  const cloneDeck = () => {
+    try {
+      // Create simplified clone data with just card IDs and quantities
+      const cloneData = {
+        name: `${deck.name} (Clone)`,
+        cards: uniqueCards.map(item => ({
+          id: item.card.id,
+          quantity: item.quantity
+        }))
+      }
+      
+      // Encode as URL parameter
+      const encodedData = encodeURIComponent(JSON.stringify(cloneData))
+      
+      // Navigate to deck builder with clone data
+      router.push(`/deck-builder?clone=${encodedData}`)
+      
+    } catch (error) {
+      console.error('Error cloning deck:', error)
+      alert('Failed to clone deck. Please try again.')
     }
   }
 
@@ -294,9 +319,11 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
             Unique Cards ({sortedUniqueCards.length})
           </button>
         </div>
-
         <div className="action-buttons">
-          <button onClick={copyShareLink} className="share-button">
+          <button
+            onClick={copyShareLink}
+            className="share-button"
+          >
             📋 Copy Link
           </button>
           <button
@@ -306,9 +333,15 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
           >
             {isGeneratingImage ? '⏳ Generating...' : '📸 Save Image'}
           </button>
+          <button
+            onClick={cloneDeck}
+            className="clone-button"
+          >
+            🔄 Clone Deck
+          </button>
         </div>
       </div>
-
+      
       <div className="deck-content" ref={deckRef}>
         <div className="deck-header-print">
           <h2>{deck.name}</h2>
@@ -389,7 +422,8 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
         }
 
         .share-button,
-        .image-button {
+        .image-button,
+        .clone-button {
           padding: 14px 20px;
           border: 2px solid var(--border-color);
           background: var(--bg-primary);
@@ -403,11 +437,23 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
         }
 
         .share-button:hover,
-        .image-button:hover:not(:disabled) {
+        .image-button:hover:not(:disabled),
+        .clone-button:hover {
           background: var(--bg-secondary);
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           border-color: var(--link-color);
+        }
+
+        .clone-button {
+          background: linear-gradient(135deg, #4CAF50, #45a049);
+          color: white;
+          border-color: #4CAF50;
+        }
+        
+        .clone-button:hover {
+          background: linear-gradient(135deg, #45a049, #3d8b40);
+          border-color: #45a049;
         }
 
         .image-button:disabled {
@@ -487,27 +533,24 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
           box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25) !important;
         }
 
-        .quantity-badge {
+        .quantity-text {
           position: absolute !important;
-          top: 10px !important;
-          left: 10px !important;
-          background: linear-gradient(135deg, #ff4444, #cc0000) !important;
-          color: white !important;
-          border-radius: 50% !important;
-          width: 36px !important;
-          height: 36px !important;
-          min-width: 36px !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          font-size: 18px !important;
+          top: 6px !important;
+          left: 8px !important;
+          color: #ffffff !important;
+          font-size: 20px !important;
           font-weight: 900 !important;
+          font-family: system-ui, -apple-system, sans-serif !important;
           z-index: 100 !important;
-          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5) !important;
-          padding: 0 !important;
-          border: 2px solid white !important;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-          font-family: 'Inter', 'Arial', sans-serif !important;
+          text-shadow: 
+            -2px -2px 0 #000,
+            2px -2px 0 #000,
+            -2px 2px 0 #000,
+            2px 2px 0 #000,
+            0 0 8px rgba(0, 0, 0, 0.8),
+            0 0 16px rgba(0, 0, 0, 0.6) !important;
+          line-height: 1 !important;
+          pointer-events: none !important;
         }
 
         .card-image {
@@ -536,14 +579,10 @@ const DeckViewer: React.FC<DeckViewerProps> = ({ deck }) => {
             gap: 10px;
           }
 
-          .quantity-badge {
-            top: 8px !important;
-            left: 8px !important;
-            width: 30px !important;
-            height: 30px !important;
-            min-width: 30px !important;
-            font-size: 16px !important;
-            border-width: 2px !important;
+          .quantity-text {
+            top: 4px !important;
+            left: 6px !important;
+            font-size: 18px !important;
           }
 
           .king-section {

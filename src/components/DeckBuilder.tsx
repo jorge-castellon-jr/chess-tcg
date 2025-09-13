@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card as CardType } from '@/payload-types'
 import Card from './Card'
 import CardFilters from './CardFilters'
@@ -18,12 +18,13 @@ interface Deck {
 
 interface DeckBuilderProps {
   availableCards?: CardType[]
+  cloneData?: string | null
 }
 
-const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
+const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneData }) => {
   const [deck, setDeck] = useState<Deck>({
     name: '',
-    cards: [],
+    cards: []
   })
   const [selectedKing, setSelectedKing] = useState<CardType | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -31,6 +32,47 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [] }) => {
   const [pieceTypeFilter, setPieceTypeFilter] = useState('')
   const [setFilter, setSetFilter] = useState('')
   const [errors, setErrors] = useState<string[]>([])
+  
+  // Initialize deck from clone data when availableCards is ready
+  useEffect(() => {
+    if (cloneData && availableCards.length > 0) {
+      try {
+        const parsedData = JSON.parse(decodeURIComponent(cloneData))
+        const deckCards: DeckCard[] = []
+        let kingCard: CardType | null = null
+        
+        // Look up full card objects from availableCards using IDs
+        parsedData.cards?.forEach((cloneCard: { id: number; quantity: number }) => {
+          const fullCard = availableCards.find(card => card.id === cloneCard.id)
+          if (fullCard) {
+            deckCards.push({
+              card: fullCard,
+              quantity: cloneCard.quantity
+            })
+            // Check if this is the king
+            if (fullCard.pieceType === 'King') {
+              kingCard = fullCard
+            }
+          }
+        })
+        
+        // Update deck state
+        setDeck({
+          name: parsedData.name || '',
+          cards: deckCards
+        })
+        
+        // Set selected king
+        if (kingCard) {
+          setSelectedKing(kingCard)
+        }
+        
+      } catch (error) {
+        console.error('Error parsing clone data:', error)
+      }
+    }
+  }, [cloneData, availableCards])
+  
   const addCardToDeck = (card: CardType) => {
     const newErrors: string[] = []
 

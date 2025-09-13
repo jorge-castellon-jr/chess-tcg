@@ -14,9 +14,15 @@ export const metadata: Metadata = {
   description: 'Build and customize your perfect Chess Trading Card Game deck.',
 }
 
-export default async function DeckBuilderPage() {
+interface DeckBuilderPageProps {
+  searchParams: Promise<{ clone?: string }>
+}
+
+export default async function DeckBuilderPage({ searchParams }: DeckBuilderPageProps) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
+  const resolvedSearchParams = await searchParams
+  const cloneData = resolvedSearchParams.clone
 
   // Fetch all cards for deck building
   let cards: Card[] = []
@@ -40,14 +46,16 @@ export default async function DeckBuilderPage() {
           <Link href="/" className={styles.homeLink}>
             ← Back to Home
           </Link>
-          <h1 className={styles.pageTitle}>Deck Builder</h1>
+          <h1 className={styles.pageTitle}>
+            Deck Builder{cloneData ? ' - Cloning Deck' : ''}
+          </h1>
         </nav>
       </header>
 
       <main className={styles.pageContentWide}>
         <div className={styles.contentContainer}>
           {cards.length > 0 ? (
-            <DeckBuilder availableCards={cards} />
+            <DeckBuilder availableCards={cards} cloneData={cloneData} />
           ) : (
             <div className={styles.noData}>
               <div className={styles.noDataIcon}>⚒️</div>
