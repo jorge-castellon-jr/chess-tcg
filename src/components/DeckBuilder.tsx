@@ -138,6 +138,15 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
       }
     }
 
+    // Check deck size limit (31 cards maximum)
+    const currentTotalCards = deck.cards.reduce(
+      (total, deckCard) => total + deckCard.quantity,
+      0
+    )
+    if (currentTotalCards >= 31) {
+      newErrors.push('Deck cannot exceed 31 cards')
+    }
+
     // Check card limit (different limits for different card types)
     const existingCard = deck.cards.find(
       (deckCard) => deckCard.card.id === card.id
@@ -246,6 +255,11 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
 
   const validateDeck = (): string[] => {
     const errors: string[] = []
+    
+    const totalCards = deck.cards.reduce(
+      (total, deckCard) => total + deckCard.quantity,
+      0
+    )
 
     if (!deck.name.trim()) {
       errors.push('Deck name is required')
@@ -257,6 +271,10 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
 
     if (!selectedKing) {
       errors.push('Deck must contain a king')
+    }
+
+    if (totalCards !== 31) {
+      errors.push(`Deck must contain exactly 31 cards (currently has ${totalCards})`)
     }
 
     return errors
@@ -433,7 +451,8 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
               const isQueen = card.pieceType === 'Queen'
               const queenMaxed = isQueen && queenCount >= 1
               const isSelectedKing = selectedKing && card.id === selectedKing.id
-              const cannotAdd = isMaxed || queenMaxed || isSelectedKing
+              const deckFull = totalCards >= 31
+              const cannotAdd = isMaxed || queenMaxed || isSelectedKing || deckFull
 
               return (
                 <div
@@ -454,8 +473,11 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
                       {card.type === 'Tactic' ? 'MAX (2)' : 'MAX (3)'}
                     </div>
                   )}
-                  {queenMaxed && !isMaxed && (
+                  {queenMaxed && !isMaxed && !deckFull && (
                     <div className="max-overlay">MAX QUEEN</div>
+                  )}
+                  {deckFull && !isSelectedKing && (
+                    <div className="max-overlay">DECK FULL (31)</div>
                   )}
                   {isSelectedKing && (
                     <div className="max-overlay">SELECTED</div>
@@ -470,7 +492,9 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
           <div className="deck-header">
             <h2 className="section-title">Your Deck</h2>
             <div className="deck-stats">
-              <span className="card-count">{totalCards} total cards</span>
+              <span className={`card-count ${totalCards === 31 ? 'complete' : totalCards > 31 ? 'over-limit' : 'incomplete'}`}>
+                {totalCards}/31 cards
+              </span>
               <span className="unique-count">{deck.cards.length} unique</span>
               {hasKing && <span className="has-king">✓ Has King</span>}
               {queenCount > 0 && (
@@ -825,6 +849,20 @@ const DeckBuilder: React.FC<DeckBuilderProps> = ({ availableCards = [], cloneDat
 
         .queen-count {
           color: #9c27b0;
+        }
+
+        .card-count.complete {
+          color: #4caf50;
+          font-weight: 600;
+        }
+
+        .card-count.over-limit {
+          color: #f44336;
+          font-weight: 600;
+        }
+
+        .card-count.incomplete {
+          color: var(--text-secondary);
         }
 
         .deck-settings {
