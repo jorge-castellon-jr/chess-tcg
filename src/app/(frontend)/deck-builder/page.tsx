@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: 'Build and customize your perfect Chess Trading Card Game deck.',
 }
 
+// Revalidate this page every 30 seconds to ensure fresh card data
+export const revalidate = 30
+
 interface DeckBuilderPageProps {
   searchParams: Promise<{ clone?: string }>
 }

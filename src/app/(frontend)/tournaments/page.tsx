@@ -14,6 +14,9 @@ export const metadata = {
     'View tournament results and upcoming competitive events for Chess Trading Card Game.',
 }
 
+// Revalidate this page every 30 seconds to ensure fresh tournament data
+export const revalidate = 30
+
 export default async function TournamentsPage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })

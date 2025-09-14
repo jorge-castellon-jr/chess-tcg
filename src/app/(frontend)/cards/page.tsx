@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     'Browse all cards in the Chess Trading Card Game with detailed stats and abilities.',
 }
 
+// Revalidate this page every 30 seconds to ensure fresh card data
+export const revalidate = 30
+
 export default async function CardsPage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })

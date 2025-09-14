@@ -13,6 +13,9 @@ export const metadata = {
     'Browse all saved decks for Chess Trading Card Game.',
 }
 
+// Revalidate this page every 30 seconds to ensure fresh deck data
+export const revalidate = 30
+
 export default async function DecksPage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })

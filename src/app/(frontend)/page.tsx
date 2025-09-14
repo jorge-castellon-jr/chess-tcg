@@ -7,6 +7,9 @@ import config from '@/payload.config'
 import ThemeToggle from '../../components/ThemeToggle'
 import './styles.css'
 
+// Revalidate this page every 30 seconds to ensure fresh data
+export const revalidate = 30
+
 export default async function HomePage() {
   const headers = await getHeaders()
   const payloadConfig = await config

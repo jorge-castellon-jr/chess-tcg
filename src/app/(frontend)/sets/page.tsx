@@ -14,6 +14,9 @@ export const metadata = {
     'Browse all card sets and expansions for Chess Trading Card Game.',
 }
 
+// Revalidate this page every 30 seconds to ensure fresh set data
+export const revalidate = 30
+
 export default async function SetsPage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
